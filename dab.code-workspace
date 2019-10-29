@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "dots-and-boxes"
+		},
+		{
+			"path": "server"
+		},
+		{
+			"name": "dots-and-boxes",
+			"path": "."
+		}
+	]
+}

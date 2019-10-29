@@ -1,0 +1,1 @@
+export * from '../../dots-and-boxes/src/app/model/model'

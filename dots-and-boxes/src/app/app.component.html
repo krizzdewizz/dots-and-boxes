@@ -1,0 +1,11 @@
+<h2>dots and boxes</h2>
+
+
+<button (click)="restart()">Restart</button>
+<div>
+    <input [(ngModel)]="playerName"  type="text">
+    <button (click)="join()">Join</button>
+</div>
+<button *ngIf="gameState === GameState.READY" (click)="start()">Start</button>
+
+<router-outlet></router-outlet>

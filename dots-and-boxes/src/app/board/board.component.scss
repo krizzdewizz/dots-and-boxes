@@ -1,0 +1,121 @@
+$box-size: 150px;
+$box-line-size: 15px;
+$player1-color: red;
+$player2-color: blue;
+
+:host {
+    margin: 40px;
+    display: block;
+    width: fit-content;
+
+    &.current-player1 {
+        div.line-free:hover {
+            background-color: $player1-color;
+        }
+    }
+
+    &.current-player2 {
+        div.line-free:hover {
+            background-color: $player2-color;
+        }
+    }
+
+    &.not-my-turn {
+        pointer-events: none;
+    }
+
+}
+
+.row {
+    display: flex;
+    height: $box-size;
+    margin-top: -$box-line-size;
+}
+
+.col {
+    width: $box-size;
+    position: relative;
+    margin-left: -$box-line-size;
+    display: flex;
+}
+
+.top, .bottom, .left, .right {
+    position: absolute;
+    display: inline;
+    background-color: lightgray;
+
+    &.boundary {
+        z-index: 1;
+    }
+}
+
+.top, .bottom {
+    height: $box-line-size;
+    width: $box-size;
+ }
+
+ .left, .right {
+    height: $box-size;
+    width: $box-line-size;
+}
+
+.bottom {
+    top: $box-size - $box-line-size;
+ }
+
+ .right {
+    left: $box-size - $box-line-size;
+ }
+
+ .cross {
+     font-size: 100px;
+     font-weight: bold;
+     align-self: center;
+     margin-left: 29%;
+ }
+
+ .boundary {
+     background-color: gray;
+ }
+
+ .player1 {
+     background-color: $player1-color;
+ }
+
+ .player2 {
+     background-color: $player2-color;
+ }
+
+ .cross-player1 {
+     color: $player1-color;
+ }
+
+ .cross-player2 {
+     color: $player2-color;
+ }
+
+ .hud {
+     display: flex;
+     font-size: 22px;
+     color: lightgray;
+     margin-bottom: 20px;
+     & > div {
+         padding: 10px;
+     }
+
+    .hud-player {
+        & > span {
+            color: black;
+        }
+    }
+
+    .hud-player1 {
+        color: $player1-color;
+        font-weight: bold;
+    }
+
+    .hud-player2 {
+        color: $player2-color;
+        font-weight: bold;
+    }
+ }

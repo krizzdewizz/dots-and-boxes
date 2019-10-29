@@ -1,0 +1,12 @@
+<div class="row" *ngFor="let row of board; let rowIndex = index">
+    <div class="col" *ngFor="let box of row; let boxIndex = index">
+      <div *ngFor="let line of lines(box)"
+        (click)="clickLine.emit({row: rowIndex, box: boxIndex, line: line.name})"
+        [class]="line.name"
+        [class.line-free]="line.owner === undefined && !line.boundary"
+        [class.boundary]="line.boundary"
+        [class.player1]="line.owner === 0"
+        [class.player2]="line.owner === 1"></div>
+      <span *ngIf="box.owner !== undefined" [class.cross-player1]="box.owner === 0" [class.cross-player2]="box.owner === 1" class="cross">X</span>
+    </div>
+  </div>
