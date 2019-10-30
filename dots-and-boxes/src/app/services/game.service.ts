@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Game, Player, GameState, PlayerIndex, EventData } from '../model/model';
+import { Game, Player, GameState, PlayerIndex, ClientSentEvent, Box, ServerSentEvent, Line } from '../model/model';
+import { BoardService, lineComplete } from './board.service';
 
 const LAST_PLAYER_ID_KEY = 'dab-player-id';
 
@@ -26,13 +27,14 @@ export class GameService {
       if (typeof message.data !== 'string') {
         return;
       }
-      let data: EventData;
+      let data: ServerSentEvent;
       try {
         data = JSON.parse(message.data);
       } catch (err) {
         console.error('error while parsing websocket message: ', err);
         return;
       }
+
       if (data.game) {
         this.game = data.game;
         this.onGame.next(data.game);
@@ -44,24 +46,30 @@ export class GameService {
   }
 
   restart() {
-    this.send({ restart: true });
+    this.send({ restart: true } as ClientSentEvent);
   }
 
   click(row: number, box: number, line) {
+    const lineObj: Line = BoardService.INSTANCE.getLine(this.game.board, row, box, line);
+
+    if (lineComplete(lineObj)) {
+      return;
+    }
+
     this.send({
       clickLine: {
         playerId: this.playerId,
         row, box, line
       }
-    });
+    } as ClientSentEvent);
   }
 
   join(player: Player) {
-    this.send({ join: { player } });
+    this.send({ join: { player } } as ClientSentEvent);
   }
 
   start() {
-    this.send({ startGame: true });
+    this.send({ startGame: true } as ClientSentEvent);
   }
 
   private send(data) {

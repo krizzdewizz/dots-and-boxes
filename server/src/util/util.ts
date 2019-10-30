@@ -5,3 +5,7 @@ export function copyObj<T>(obj: T): T {
 export function sleep(millis: number): Promise<void> {
     return new Promise<void>(resolve => setTimeout(resolve, millis));
 }
+
+export function log(...args: any[]) {
+    console.log(new Date(Date.now()).toISOString(), ...args);
+}

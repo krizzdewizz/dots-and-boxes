@@ -5,7 +5,7 @@ describe('BoardService', () => {
     let service: BoardService;
 
     beforeEach(() => {
-        service = new BoardService();
+        service = BoardService.INSTANCE;
     });
 
     it('should create board', () => {

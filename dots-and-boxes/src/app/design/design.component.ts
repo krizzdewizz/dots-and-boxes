@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Board } from '../model/model';
+import { Board, Line } from '../model/model';
+import { DesignService } from '../services/design.service';
 import { BoardService } from '../services/board.service';
 
 @Component({
@@ -10,12 +11,16 @@ import { BoardService } from '../services/board.service';
 export class DesignComponent implements OnInit {
 
   board: Board;
-  private boardService = new BoardService();
 
-  constructor() { }
+  constructor(private designService: DesignService) { }
 
   ngOnInit() {
-    this.board = this.boardService.newBoard(4);
+    this.board = this.designService.board;
   }
 
+  onClickLine({ row, box, line }) {
+    const lineObj = BoardService.INSTANCE.getLine(this.board, row, box, line);
+    lineObj.boundary = !lineObj.boundary;
+    this.designService.saveBoard();
+  }
 }

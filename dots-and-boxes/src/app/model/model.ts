@@ -26,22 +26,6 @@ export enum GameState {
     WAITING_FOR_PLAYERS, READY, PLAYING, ENDED
 }
 
-export type GameEvent = 'join' | 'start' | 'clickLine';
-export interface JoinEvent {
-    player: Player;
-}
-
-export interface StartEvent {
-    startGame: boolean;
-}
-
-export interface ClickLineEvent {
-    playerId: number;
-    row: number;
-    box: number;
-    line: keyof Box; // w/o owner
-}
-
 export interface Game {
     state: GameState;
     currentPlayer?: PlayerIndex;
@@ -51,7 +35,20 @@ export interface Game {
     players: Player[];
 }
 
-export interface EventData {
-    game?: Game; // when the game is ready
-    playerId?: number; // as a result of the join request
+export interface ServerSentEvent {
+    game?: Game;
+    playerId?: number;
 }
+
+export interface ClientSentEvent {
+    startGame?: true;
+    join?: { player: Player };
+    clickLine?: {
+        playerId: number;
+        row: number;
+        box: number;
+        line: keyof Box; // w/o owner
+    };
+    restart?: true;
+}
+

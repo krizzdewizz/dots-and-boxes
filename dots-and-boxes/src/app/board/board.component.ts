@@ -1,25 +1,25 @@
-import { Component, OnInit, HostBinding, Input, Output, EventEmitter } from '@angular/core';
-import { Board, Box, Line } from '../model/model';
-import { GameService } from '../services/game.service';
+import { Component, HostBinding, Input, Output, EventEmitter } from '@angular/core';
+import { Board, Box } from '../model/model';
 import { DomSanitizer } from '@angular/platform-browser';
+import { BoardService } from '../services/board.service';
 
 @Component({
   selector: 'dab-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent {
 
   @HostBinding('class.current-player1') get currentPlayer1Class(): boolean {
-    return this.gameService.isPlayerTurn(0);
+    return this.player0Turn;
   }
 
   @HostBinding('class.current-player2') get currentPlayer2Class(): boolean {
-    return this.gameService.isPlayerTurn(1);
+    return this.player1Turn;
   }
 
   @HostBinding('class.inactive') get notMyTurnClass() {
-    return !this.gameService.isMyTurn;
+    return !this.design && this.disabled;
   }
 
   @HostBinding('attr.style') get styleAttr() {
@@ -34,12 +34,14 @@ export class BoardComponent implements OnInit {
 
   @Input() board: Board;
 
+  @HostBinding('class.design') @Input() design: boolean;
+  @Input() disabled = false;
+  @Input() player0Turn = false;
+  @Input() player1Turn = false;
+
   @Output() clickLine = new EventEmitter();
 
-  constructor(private gameService: GameService, private sanitizer: DomSanitizer) {
-  }
-
-  ngOnInit() {
+  constructor(private sanitizer: DomSanitizer) {
   }
 
   lines(box: Box) {
@@ -52,6 +54,13 @@ export class BoardComponent implements OnInit {
   }
 
   onClickLine(row: number, box: number, line: string) {
+    if (this.disabled) {
+      return;
+    }
     this.clickLine.emit({ row, box, line });
+  }
+
+  boundaryOwner(box: Box): boolean {
+    return BoardService.INSTANCE.isBoundaryOwner(box);
   }
 }

@@ -1,26 +1,14 @@
-import { Player, Line, Box, Game, GameState, PlayerIndex, ClickLineEvent, JoinEvent } from './model';
-import { BoardService } from './board.service';
-import { copyObj } from './util/util';
-import { EventData } from '../../dots-and-boxes/src/app/model/model';
-
-function lineComplete(line: Line): boolean {
-  return line.boundary || line.owner !== undefined;
-}
-
-function boxComplete(box: Box): boolean {
-  return lineComplete(box.top)
-    && lineComplete(box.left)
-    && lineComplete(box.bottom)
-    && lineComplete(box.right);
-}
+import { Player, Line, Game, GameState, PlayerIndex } from './model';
+import { BoardService, lineComplete, boxComplete } from './board.service';
+import { copyObj, log } from './util/util';
+import { ClientSentEvent, ServerSentEvent } from '../../dots-and-boxes/src/app/model/model';
 
 const OK = { ok: true };
 
 export class GameService {
 
   game: Game;
-  private boardService = new BoardService();
-  private lastBoardSize = 8;
+  private lastBoardSize = 3;
 
   players: Player[] = [];
 
@@ -45,7 +33,7 @@ export class GameService {
       state: GameState.WAITING_FOR_PLAYERS,
       currentPlayer: 0,
       countBoxesOwnedBy: {},
-      board: this.boardService.newBoard(boardSize),
+      board: BoardService.INSTANCE.newBoard(boardSize),
       players: copyObj(this.players),
       winners: []
     };
@@ -59,7 +47,7 @@ export class GameService {
 
     const joiningPlayerName = player.name.toLowerCase();
     if (this.players.some(({ name }) => name.toLowerCase() === joiningPlayerName)) {
-      console.log(`name "${player.name}" alreay used. Please use a different one.`);
+      log(`name "${player.name}" alreay used. Please use a different one.`);
       return;
     }
 
@@ -78,11 +66,11 @@ export class GameService {
     }
   }
 
-  handle(msg): { ok: boolean, data?: EventData } {
+  handle(msg: ClientSentEvent): { ok: boolean, data?: ServerSentEvent } {
     if (msg.clickLine) {
-      const ev = msg.clickLine as ClickLineEvent;
-      const line = this.game.board[ev.row][ev.box][ev.line] as Line;
-      this.click(ev.playerId, line);
+      const { row, box, line, playerId } = msg.clickLine;
+      const lineObj = BoardService.INSTANCE.getLine(this.game.board, row, box, line);
+      this.click(playerId, lineObj);
       return OK;
     } else if (msg.startGame) {
       this.startGame();
@@ -91,8 +79,7 @@ export class GameService {
       this.restart();
       return OK;
     } else if (msg.join) {
-      const ev = msg.join as JoinEvent;
-      const playerId = this.join(ev.player);
+      const playerId = this.join(msg.join.player);
       if (playerId) {
         return { ok: true, data: { playerId } };
       }
@@ -113,7 +100,6 @@ export class GameService {
     if (playerId !== currPlayerId) {
       return;
     }
-
 
     line.owner = game.currentPlayer;
 
@@ -172,5 +158,6 @@ export class GameService {
 
     this.game.state = GameState.ENDED;
     this.game.winners = winners;
+    log('game end');
   }
 }

@@ -1,5 +1,6 @@
 $player1-color: red;
 $player2-color: blue;
+$boundary-color: gray;
 
 :host {
     margin: 40px;
@@ -14,6 +15,18 @@ $player2-color: blue;
         left: calc(-1 * var(--box-line-size) / 2);
         position: absolute;
         background-color: gray;
+        z-index: 1;
+    }
+
+    .boundary-box {
+        background-color: $boundary-color;
+        opacity: 0.8;
+
+        width: calc(var(--box-size) - var(--box-line-size) * 2);
+        height: calc(var(--box-size) - var(--box-line-size) * 2);
+        top: var(--box-line-size);
+        left: var(--box-line-size);
+        position: absolute;
         z-index: 1;
     }
 
@@ -39,104 +52,112 @@ $player2-color: blue;
         }
     }
 
-    &.inactive {
-        pointer-events: none;
+    &.inactive .line {
+        cursor: initial;
     }
 
-}
-
-.row {
-    display: flex;
-    height: var(--box-size);
-    margin-top: calc(-1 * var(--box-line-size));
-}
-
-.col {
-    width: var(--box-size);
-    position: relative;
-    margin-left: calc(-1 * var(--box-line-size));
-    display: flex;
-}
-
-.top, .bottom, .left, .right {
-    position: absolute;
-    display: inline;
-    background-color: #f0f0f0;
-
-    &.boundary {
-        z-index: 1;
-    }
-}
-
-.top, .bottom {
-    height: var(--box-line-size);
-    width: var(--box-size);
- }
-
- .left, .right {
-    height: var(--box-size);
-    width: var(--box-line-size);
-}
-
-.bottom {
-    top: calc(var(--box-size) - var(--box-line-size));
- }
-
- .right {
-    left: calc(var(--box-size) - var(--box-line-size));
- }
-
- .cross {
-    position: absolute;
-    left: calc(var(--box-size) / 2 - (var(--box-line-size) / 2));
-
-    &::before, &::after {
-        display: block;
-        position: absolute;
-        width: var(--box-line-size);
+    .row {
+        display: flex;
         height: var(--box-size);
-        content: "";
-        border-radius: var(--box-line-size);
+        margin-top: calc(-1 * var(--box-line-size));
     }
 
-    &.cross-player1 {
-        & {
-            &::before, &::after {
-                background-color: $player1-color;
-            }
+    .col {
+        width: var(--box-size);
+        position: relative;
+        margin-left: calc(-1 * var(--box-line-size));
+        display: flex;
+    }
+
+    .line {
+        position: absolute;
+        display: inline;
+        background-color: #f0f0f0;
+        cursor: pointer;
+
+        &.boundary {
+            z-index: 1;
         }
     }
 
-    &.cross-player2 {
-        & {
-            &::before, &::after {
-                background-color: $player2-color;
+    .top, .bottom {
+        height: var(--box-line-size);
+        width: var(--box-size);
+    }
+
+    .left, .right {
+        height: var(--box-size);
+        width: var(--box-line-size);
+    }
+
+    .bottom {
+        top: calc(var(--box-size) - var(--box-line-size));
+    }
+
+    .right {
+        left: calc(var(--box-size) - var(--box-line-size));
+    }
+
+    .cross {
+        position: absolute;
+        left: calc(var(--box-size) / 2 - (var(--box-line-size) / 2));
+
+        &::before, &::after {
+            display: block;
+            position: absolute;
+            width: var(--box-line-size);
+            height: var(--box-size);
+            content: "";
+            border-radius: var(--box-line-size);
+        }
+
+        &.cross-player1 {
+            & {
+                &::before, &::after {
+                    background-color: $player1-color;
+                }
             }
+        }
+
+        &.cross-player2 {
+            & {
+                &::before, &::after {
+                    background-color: $player2-color;
+                }
+            }
+        }
+
+        &::before {
+        transform: rotate(45deg) scale(0.8);
+        }
+
+        &::after {
+        transform: rotate(-45deg) scale(0.8);
         }
     }
 
-    &::before {
-       transform: rotate(45deg) scale(0.8);
+    .boundary {
+        background-color: $boundary-color;
     }
 
-    &::after {
-       transform: rotate(-45deg) scale(0.8);
+    .player1 {
+        background-color: $player1-color;
     }
- }
 
- .boundary {
-     background-color: gray;
- }
+    .player2 {
+        background-color: $player2-color;
+    }
 
- .player1 {
-     background-color: $player1-color;
- }
+    .player1, .player2, .boundary {
+        cursor: initial;
+    }
 
- .player2 {
-     background-color: $player2-color;
- }
+    &.design .boundary {
+        cursor: pointer;
+    }
+}
 
- .hud {
+.hud {
      display: flex;
      font-size: 22px;
      color: lightgray;

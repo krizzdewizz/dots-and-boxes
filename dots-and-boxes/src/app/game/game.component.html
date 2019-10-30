@@ -24,7 +24,11 @@
 
       </div>
 
-      <dab-board (clickLine)="onClickLine($event)" [board]="game.board"></dab-board>
+      <pre>
+        PL: {{gameService.currentPlayer?.name}}
+      </pre>
+
+      <dab-board (clickLine)="onClickLine($event)" [board]="game.board" [disabled]="boardDisabled" [player0Turn]="playerTurn(0)" [player1Turn]="playerTurn(1)"></dab-board>
 
     </ng-template>
   </ng-container>

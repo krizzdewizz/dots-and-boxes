@@ -1,5 +1,6 @@
 import { GameService } from "./game.service";
-import { EventData } from "../../dots-and-boxes/src/app/model/model";
+import { ServerSentEvent } from "../../dots-and-boxes/src/app/model/model";
+import { log } from "./util/util";
 
 declare const require;
 const express = require('express');
@@ -19,10 +20,10 @@ const gameService = new GameService();
 
 wss.on('connection', ws => {
 
-    console.log(`${Date.now()} - connection+++`);
+    log(`connection++`);
 
     function sendGame(dest) {
-        const data: EventData = { game: gameService.game };
+        const data: ServerSentEvent = { game: gameService.game };
         dest.send(JSON.stringify(data));
     }
 
@@ -30,23 +31,20 @@ wss.on('connection', ws => {
 
     ws.on('message', message => {
 
-        console.log(`${Date.now()} - received:`, message);
+        log(`received:`, message);
 
         const msg = JSON.parse(message);
 
         const { ok, data } = gameService.handle(msg);
         if (ok) {
-
-            ws.send(JSON.stringify(data));
-
-            wss.clients.forEach((client, index) => {
-                // if (client !== ws) {
-                console.log('send to client ', index);
-                sendGame(client);
-                // }
-            });
+            if (data) {
+                log('sending response to client:', data);
+                ws.send(JSON.stringify(data));
+            }
+            log('sending game state to clients');
+            wss.clients.forEach(sendGame);
         }
     });
 });
 
-server.listen(PORT, () => console.log(`Server started on port ${server.address().port}`));
+server.listen(PORT, () => log(`Server started on port ${server.address().port}`));

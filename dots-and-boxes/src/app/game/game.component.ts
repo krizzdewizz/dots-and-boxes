@@ -28,4 +28,12 @@ export class GameComponent {
   countBoxesOwnedBy(player: PlayerIndex): number {
     return this.gameService.game.countBoxesOwnedBy[player];
   }
+
+  get boardDisabled(): boolean {
+    return !this.gameService.isMyTurn;
+  }
+
+  playerTurn(index: PlayerIndex): boolean {
+    return this.gameService.isPlayerTurn(index);
+  }
 }
