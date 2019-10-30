@@ -1,6 +1,7 @@
 import { Component, OnInit, HostBinding, Input, Output, EventEmitter } from '@angular/core';
 import { Board, Box, Line } from '../model/model';
 import { GameService } from '../services/game.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'dab-board',
@@ -25,11 +26,21 @@ export class BoardComponent implements OnInit {
     return !this.gameService.isMyTurn;
   }
 
+  @HostBinding('attr.style') get styleAttr() {
+    // const boxSize = 50;
+    // const boxLineSize = 8;
+    const boxSize = 80;
+    const boxLineSize = 12;
+    // const boxSize = 150;
+    // const boxLineSize = 16;
+    return this.sanitizer.bypassSecurityTrustStyle(`--box-size: ${boxSize}px; --box-line-size: ${boxLineSize}px;`);
+  }
+
   @Input() board: Board;
 
   @Output() clickLine = new EventEmitter();
 
-  constructor(private gameService: GameService) {
+  constructor(private gameService: GameService, private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {

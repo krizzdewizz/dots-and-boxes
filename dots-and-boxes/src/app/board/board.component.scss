@@ -1,5 +1,3 @@
-$box-size: 150px;
-$box-line-size: 12px;
 $player1-color: red;
 $player2-color: blue;
 
@@ -9,22 +7,22 @@ $player2-color: blue;
     width: fit-content;
 
     .dot {
-        width: $box-line-size * 2;
-        height: $box-line-size * 2;
-        border-radius: $box-line-size;
-        top: -$box-line-size / 2;
-        left: -$box-line-size / 2;
+        width: calc(var(--box-line-size) * 2);
+        height: calc(var(--box-line-size) * 2);
+        border-radius: var(--box-line-size);
+        top: calc(-1 * var(--box-line-size) / 2);
+        left: calc(-1 * var(--box-line-size) / 2);
         position: absolute;
         background-color: gray;
         z-index: 1;
     }
 
     .dot-bottom {
-        top: $box-size - ($box-line-size * 1.5);
+        top: calc(var(--box-size) - (var(--box-line-size) * 1.5));
     }
 
     .dot-right {
-        left: $box-size - ($box-line-size * 1.5);
+        left: calc(var(--box-size) - (var(--box-line-size) * 1.5));
     }
 
     &.current-player1 {
@@ -49,14 +47,14 @@ $player2-color: blue;
 
 .row {
     display: flex;
-    height: $box-size;
-    margin-top: -$box-line-size;
+    height: var(--box-size);
+    margin-top: calc(-1 * var(--box-line-size));
 }
 
 .col {
-    width: $box-size;
+    width: var(--box-size);
     position: relative;
-    margin-left: -$box-line-size;
+    margin-left: calc(-1 * var(--box-line-size));
     display: flex;
 }
 
@@ -71,28 +69,44 @@ $player2-color: blue;
 }
 
 .top, .bottom {
-    height: $box-line-size;
-    width: $box-size;
+    height: var(--box-line-size);
+    width: var(--box-size);
  }
 
  .left, .right {
-    height: $box-size;
-    width: $box-line-size;
+    height: var(--box-size);
+    width: var(--box-line-size);
 }
 
 .bottom {
-    top: $box-size - $box-line-size;
+    top: calc(var(--box-size) - var(--box-line-size));
  }
 
  .right {
-    left: $box-size - $box-line-size;
+    left: calc(var(--box-size) - var(--box-line-size));
  }
 
  .cross {
-     font-size: 100px;
-     font-weight: bold;
-     align-self: center;
-     margin-left: 29%;
+    position: absolute;
+    left: calc(var(--box-size) / 2 - (var(--box-line-size) / 2));
+
+    &::before, &::after {
+        display: block;
+        position: absolute;
+        width: var(--box-line-size);
+        height: var(--box-size);
+        background-color: red;
+        content: "";
+        border-radius: var(--box-line-size);
+    }
+
+    &::before {
+       transform: rotate(45deg) scale(0.8);
+    }
+
+    &::after {
+       transform: rotate(-45deg) scale(0.8);
+    }
  }
 
  .boundary {

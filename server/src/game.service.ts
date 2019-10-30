@@ -38,7 +38,7 @@ export class GameService {
       state: GameState.WAITING_FOR_PLAYERS,
       currentPlayer: 0,
       countBoxesOwnedBy: new Array(this.players.length).fill(0),
-      board: this.boardService.newBoard(3),
+      board: this.boardService.newBoard(10),
       players: copyObj(this.players),
       winners: []
     };
