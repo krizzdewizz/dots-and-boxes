@@ -47,6 +47,6 @@ export interface Game {
     currentPlayer: PlayerIndex;
     board?: Board;
     countBoxesOwnedBy: number[]; // [player0Count, player1Count, ...]
-    winner?: PlayerIndex;
+    winners: PlayerIndex[];
     players: Player[];
 }

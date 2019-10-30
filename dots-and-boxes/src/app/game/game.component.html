@@ -14,7 +14,13 @@
           <span> - {{countBoxesOwnedBy(1)}}</span>
         </div>
 
-        <div *ngIf="game.winner !== undefined" class="hud-winner">WINNER: {{game.players[game.winner]?.name}}</div>
+        <div *ngIf="game.winners.length" class="hud-winner">WINNER:
+
+          <ng-container *ngFor="let winner of game.winners">
+            {{game.players[winner].name}}
+          </ng-container>
+
+        </div>
 
       </div>
 
