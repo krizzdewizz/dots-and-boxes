@@ -95,9 +95,24 @@ $player2-color: blue;
         position: absolute;
         width: var(--box-line-size);
         height: var(--box-size);
-        background-color: red;
         content: "";
         border-radius: var(--box-line-size);
+    }
+
+    &.cross-player1 {
+        & {
+            &::before, &::after {
+                background-color: $player1-color;
+            }
+        }
+    }
+
+    &.cross-player2 {
+        & {
+            &::before, &::after {
+                background-color: $player2-color;
+            }
+        }
     }
 
     &::before {
@@ -119,14 +134,6 @@ $player2-color: blue;
 
  .player2 {
      background-color: $player2-color;
- }
-
- .cross-player1 {
-     color: $player1-color;
- }
-
- .cross-player2 {
-     color: $player2-color;
  }
 
  .hud {
