@@ -44,9 +44,14 @@ export interface ClickLineEvent {
 
 export interface Game {
     state: GameState;
-    currentPlayer: PlayerIndex;
+    currentPlayer?: PlayerIndex;
     board?: Board;
-    countBoxesOwnedBy: number[]; // [player0Count, player1Count, ...]
+    countBoxesOwnedBy: { [playerIndex: number]: number };
     winners: PlayerIndex[];
     players: Player[];
+}
+
+export interface EventData {
+    game?: Game; // when the game is ready
+    playerId?: number; // as a result of the join request
 }

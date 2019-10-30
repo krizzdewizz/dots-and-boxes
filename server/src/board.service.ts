@@ -1,4 +1,4 @@
-import { Board, Box, Row, Line } from './model'
+import { Board, Box, Row } from './model';
 
 function newBox(): Box {
   return {
@@ -6,30 +6,30 @@ function newBox(): Box {
     left: {},
     bottom: {},
     right: {},
-  }
+  };
 }
 
-function joinBoxes(left: Box, right: Box) {
+function joinBoxesLeftRight(left: Box, right: Box) {
   if (!left) {
-    return
+    return;
   }
-  left.right = right.left
+  left.right = right.left;
 }
 
 function joinBoxesTopBottom(top: Box, bottom: Box) {
-  top.bottom = bottom.top
+  top.bottom = bottom.top;
 }
 
 function addRow(board: Board, row: Row) {
-  const topRow = board[board.length - 1]
+  const topRow = board[board.length - 1];
   if (topRow) {
     topRow.forEach((topBox, colIndex) => {
-      const box = row[colIndex]
-      joinBoxesTopBottom(topBox, box)
-    })
+      const box = row[colIndex];
+      joinBoxesTopBottom(topBox, box);
+    });
   }
 
-  board.push(row)
+  board.push(row);
 }
 
 export class BoardService {
@@ -37,34 +37,34 @@ export class BoardService {
   constructor() { }
 
   newBoard(size: number): Board {
-    const board: Board = []
+    const board: Board = [];
 
     for (let row = 0; row < size; row++) {
-      const r: Row = []
-      let prevBox: Box
+      const r: Row = [];
+      let prevBox: Box;
       for (let col = 0; col < size; col++) {
-        const box = newBox()
+        const box = newBox();
 
-        joinBoxes(prevBox, box)
-        prevBox = box
+        joinBoxesLeftRight(prevBox, box);
+        prevBox = box;
 
         if (col === 0) {
-          box.left.boundary = true
+          box.left.boundary = true;
         } else if (col === size - 1) {
-          box.right.boundary = true
+          box.right.boundary = true;
         }
 
         if (row === 0) {
-          box.top.boundary = true
+          box.top.boundary = true;
         } else if (row === size - 1) {
-          box.bottom.boundary = true
+          box.bottom.boundary = true;
         }
 
-        r.push(box)
+        r.push(box);
       }
-      addRow(board, r)
+      addRow(board, r);
     }
 
-    return board
+    return board;
   }
 }

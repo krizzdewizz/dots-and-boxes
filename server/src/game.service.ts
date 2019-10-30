@@ -1,6 +1,7 @@
 import { Player, Line, Box, Game, GameState, PlayerIndex, ClickLineEvent, JoinEvent } from './model';
 import { BoardService } from './board.service';
 import { copyObj } from './util/util';
+import { EventData } from '../../dots-and-boxes/src/app/model/model';
 
 function lineComplete(line: Line): boolean {
   return line.boundary || line.owner !== undefined;
@@ -13,14 +14,19 @@ function boxComplete(box: Box): boolean {
     && lineComplete(box.right);
 }
 
+const OK = { ok: true };
+
 export class GameService {
 
   game: Game;
   private boardService = new BoardService();
+  private lastBoardSize = 8;
 
   players: Player[] = [];
 
-  constructor() { }
+  constructor() {
+    this.newGame();
+  }
 
   startGame() {
     this.game.state = GameState.PLAYING;
@@ -33,35 +39,37 @@ export class GameService {
     }
   }
 
-  newGame() {
+  newGame(boardSize = this.lastBoardSize) {
+    this.lastBoardSize = boardSize;
     this.game = {
       state: GameState.WAITING_FOR_PLAYERS,
       currentPlayer: 0,
-      countBoxesOwnedBy: new Array(this.players.length).fill(0),
-      board: this.boardService.newBoard(10),
+      countBoxesOwnedBy: {},
+      board: this.boardService.newBoard(boardSize),
       players: copyObj(this.players),
       winners: []
     };
     this.updateReady();
   }
 
-  join(player: Player) {
+  join(player: Player): number {
     if (!player.name) {
-      return false;
+      return;
     }
 
-    const { game } = this;
-
-    if (this.players.some(({ name }) => name === player.name)) {
+    const joiningPlayerName = player.name.toLowerCase();
+    if (this.players.some(({ name }) => name.toLowerCase() === joiningPlayerName)) {
       console.log(`name "${player.name}" alreay used. Please use a different one.`);
-      return false;
+      return;
     }
 
-    player.id = Date.now();
-    this.players.push(player);
-    game.players = copyObj(this.players);
+    const id = Date.now();
+    const newPlayer = { ...player, id };
+
+    this.players.push(newPlayer);
+    this.game.players = copyObj(this.players);
     this.updateReady();
-    return true;
+    return id;
   }
 
   private updateReady() {
@@ -70,25 +78,27 @@ export class GameService {
     }
   }
 
-  handle(msg, ws) {
+  handle(msg): { ok: boolean, data?: EventData } {
     if (msg.clickLine) {
       const ev = msg.clickLine as ClickLineEvent;
       const line = this.game.board[ev.row][ev.box][ev.line] as Line;
       this.click(ev.playerId, line);
-      return true;
+      return OK;
     } else if (msg.startGame) {
       this.startGame();
-      return true;
+      return OK;
     } else if (msg.restart) {
       this.restart();
-      return true;
+      return OK;
     } else if (msg.join) {
       const ev = msg.join as JoinEvent;
-      if (this.join(ev.player)) {
-        ws.send(JSON.stringify({ playerId: ev.player.id }));
+      const playerId = this.join(ev.player);
+      if (playerId) {
+        return { ok: true, data: { playerId } };
       }
-      return true;
     }
+
+    return { ok: false };
   }
 
   click(playerId: number, line: Line) {
@@ -104,22 +114,23 @@ export class GameService {
       return;
     }
 
+
     line.owner = game.currentPlayer;
 
-    let hitBox = false;
-    game.board
-      .forEach(row =>
-        row
-          .filter(box => box.owner === undefined && boxComplete(box))
-          .forEach(box => {
-            box.owner = game.currentPlayer;
-            hitBox = true;
-          }));
+    const { currentPlayer } = game;
+    let ownsNewBox = false;
+    game.board.forEach(row =>
+      row
+        .filter(box => box.owner === undefined && boxComplete(box))
+        .forEach(box => {
+          box.owner = currentPlayer;
+          ownsNewBox = true;
+        }));
 
     this.updateCountBoxesOwnedBy();
-    this.checkWinner();
+    this.checkWinners();
 
-    if (game.state === GameState.PLAYING && !hitBox) {
+    if (!ownsNewBox) {
       this.nextPlayer();
     }
   }
@@ -142,7 +153,7 @@ export class GameService {
     game.countBoxesOwnedBy[currentPlayer] = count;
   }
 
-  private checkWinner() {
+  private checkWinners() {
     const hasFreeBoxes = this.game.board.some(row => row.some(box => box.owner === undefined));
     if (hasFreeBoxes) {
       return;
@@ -150,9 +161,11 @@ export class GameService {
 
     let max = 0;
     let winners: PlayerIndex[] = [];
-    this.game.countBoxesOwnedBy.forEach((count, playerIndex) => {
+    const { countBoxesOwnedBy } = this.game;
+    Object.keys(countBoxesOwnedBy).forEach(playerIndex => {
+      const count = countBoxesOwnedBy[playerIndex];
       if (count >= max) {
-        winners.push(playerIndex);
+        winners.push(Number(playerIndex));
         max = count;
       }
     });

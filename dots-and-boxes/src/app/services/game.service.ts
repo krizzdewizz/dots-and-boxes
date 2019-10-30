@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Game, Player, GameState } from '../model/model';
+import { Game, Player, GameState, PlayerIndex, EventData } from '../model/model';
 
 const LAST_PLAYER_ID_KEY = 'dab-player-id';
 
@@ -22,14 +22,23 @@ export class GameService {
     this.ws = new WebSocket(`ws://${location.host}/api`);
     this.ws.onopen = () => console.log('websocket is connected');
     this.ws.onmessage = message => {
-      console.log('client received:', message);
-      const data = JSON.parse(message.data);
+      console.log('client received:', message, 'typeof data: ', typeof message.data);
+      if (typeof message.data !== 'string') {
+        return;
+      }
+      let data: EventData;
+      try {
+        data = JSON.parse(message.data);
+      } catch (err) {
+        console.error('error while parsing websocket message: ', err);
+        return;
+      }
       if (data.game) {
         this.game = data.game;
         this.onGame.next(data.game);
       } else if (data.playerId) {
         this.playerId = data.playerId;
-        localStorage.setItem(LAST_PLAYER_ID_KEY, data.playerId);
+        localStorage.setItem(LAST_PLAYER_ID_KEY, String(data.playerId));
       }
     };
   }
@@ -70,5 +79,9 @@ export class GameService {
   get isMyTurn(): boolean {
     const currPlayer = this.currentPlayer;
     return currPlayer && currPlayer.id === this.playerId;
+  }
+
+  isPlayerTurn(player: PlayerIndex): boolean {
+    return this.isMyTurn && this.game.currentPlayer === player;
   }
 }

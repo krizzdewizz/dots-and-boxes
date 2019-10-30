@@ -1,50 +1,52 @@
 import { GameService } from "./game.service";
-import { BoardService } from "./board.service";
+import { EventData } from "../../dots-and-boxes/src/app/model/model";
 
 declare const require;
-const express = require('express')
-const http = require('http')
-const WS = require('ws')
+const express = require('express');
+const http = require('http');
+const WS = require('ws');
 
-const PORT = 8999
+const PORT = 8999;
 
-const app = express()
+const app = express();
 // .use('/node_modules', express.static('node_modules'))
 // .use(express.static('www'))
 
-const server = http.createServer(app)
-const wss = new WS.Server({ server })
+const server = http.createServer(app);
+const wss = new WS.Server({ server });
 
-const gameService = new GameService()
-gameService.newGame()
+const gameService = new GameService();
 
 wss.on('connection', ws => {
 
-    console.log(`${Date.now()} - connection+++`)
+    console.log(`${Date.now()} - connection+++`);
 
     function sendGame(dest) {
-        dest.send(JSON.stringify({ game: gameService.game }))
+        const data: EventData = { game: gameService.game };
+        dest.send(JSON.stringify(data));
     }
 
-    sendGame(ws)
+    sendGame(ws);
 
     ws.on('message', message => {
 
-        console.log(`${Date.now()} - received:`, message)
+        console.log(`${Date.now()} - received:`, message);
 
-        const msg = JSON.parse(message)
+        const msg = JSON.parse(message);
 
-        if (gameService.handle(msg, ws)) {
-            let index = 0
-            wss.clients.forEach(client => {
+        const { ok, data } = gameService.handle(msg);
+        if (ok) {
+
+            ws.send(JSON.stringify(data));
+
+            wss.clients.forEach((client, index) => {
                 // if (client !== ws) {
-                console.log('send to client ', index)
-                sendGame(client)
-                index++
+                console.log('send to client ', index);
+                sendGame(client);
                 // }
-            })
+            });
         }
-    })
-})
+    });
+});
 
-server.listen(PORT, () => console.log(`Server started on port ${server.address().port}`))
+server.listen(PORT, () => console.log(`Server started on port ${server.address().port}`));

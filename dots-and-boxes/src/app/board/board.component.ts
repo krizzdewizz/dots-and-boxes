@@ -10,19 +10,15 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class BoardComponent implements OnInit {
 
-  @HostBinding('class.active') get active(): boolean {
-    return this.gameService.isMyTurn;
-  }
-
   @HostBinding('class.current-player1') get currentPlayer1Class(): boolean {
-    return this.gameService.isMyTurn && this.gameService.game.currentPlayer === 0;
+    return this.gameService.isPlayerTurn(0);
   }
 
   @HostBinding('class.current-player2') get currentPlayer2Class(): boolean {
-    return this.gameService.isMyTurn && this.gameService.game.currentPlayer === 1;
+    return this.gameService.isPlayerTurn(1);
   }
 
-  @HostBinding('class.not-my-turn') get notMyTurnClass() {
+  @HostBinding('class.inactive') get notMyTurnClass() {
     return !this.gameService.isMyTurn;
   }
 
@@ -44,8 +40,6 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit() {
-    // const board = this.boardService.newBoard(2)
-    // this.gameService.startGame(0)
   }
 
   lines(box: Box) {

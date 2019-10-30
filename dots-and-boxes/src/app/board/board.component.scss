@@ -39,7 +39,7 @@ $player2-color: blue;
         }
     }
 
-    &.not-my-turn {
+    &.inactive {
         pointer-events: none;
     }
 
