@@ -10,9 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "aframe": "^0.8.2",
-    "express": "^4.16.3",
-    "ws": "^6.0.0"
+    "express": "4.17.1",
+    "ws": "7.2.0"
   },
   "devDependencies": {
   }

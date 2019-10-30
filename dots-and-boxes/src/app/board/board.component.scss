@@ -1,5 +1,5 @@
 $box-size: 150px;
-$box-line-size: 15px;
+$box-line-size: 12px;
 $player1-color: red;
 $player2-color: blue;
 
@@ -8,15 +8,36 @@ $player2-color: blue;
     display: block;
     width: fit-content;
 
+    .dot {
+        width: $box-line-size * 2;
+        height: $box-line-size * 2;
+        border-radius: $box-line-size;
+        top: -$box-line-size / 2;
+        left: -$box-line-size / 2;
+        position: absolute;
+        background-color: gray;
+        z-index: 1;
+    }
+
+    .dot-bottom {
+        top: $box-size - ($box-line-size * 1.5);
+    }
+
+    .dot-right {
+        left: $box-size - ($box-line-size * 1.5);
+    }
+
     &.current-player1 {
-        div.line-free:hover {
+        .line-free:hover {
             background-color: $player1-color;
+            opacity: 0.4;
         }
     }
 
     &.current-player2 {
-        div.line-free:hover {
+        .line-free:hover {
             background-color: $player2-color;
+            opacity: 0.4;
         }
     }
 
@@ -42,7 +63,7 @@ $player2-color: blue;
 .top, .bottom, .left, .right {
     position: absolute;
     display: inline;
-    background-color: lightgray;
+    background-color: #f0f0f0;
 
     &.boundary {
         z-index: 1;

@@ -7,10 +7,10 @@ function lineComplete(line: Line): boolean {
 }
 
 function boxComplete(box: Box): boolean {
-  return lineComplete(box.top) &&
-    lineComplete(box.left) &&
-    lineComplete(box.bottom) &&
-    lineComplete(box.right)
+  return lineComplete(box.top)
+    && lineComplete(box.left)
+    && lineComplete(box.bottom)
+    && lineComplete(box.right)
 }
 
 export class GameService {
@@ -22,7 +22,7 @@ export class GameService {
 
   constructor() { }
 
-  startGame(board?: Board) {
+  startGame() {
     this.game.state = GameState.PLAYING
   }
 
@@ -33,7 +33,7 @@ export class GameService {
     }
   }
 
-  newGame(board?: Board) {
+  newGame() {
     this.game = {
       state: GameState.WAITING_FOR_PLAYERS,
       currentPlayer: 0,
@@ -141,7 +141,6 @@ export class GameService {
   }
 
   private checkWinner() {
-    const { game } = this
     const hasFreeBoxes = this.game.board.some(row => row.some(box => box.owner === undefined))
     if (hasFreeBoxes) {
       return

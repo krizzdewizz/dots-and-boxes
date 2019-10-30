@@ -5,10 +5,6 @@
 		},
 		{
 			"path": "server"
-		},
-		{
-			"name": "dots-and-boxes",
-			"path": "."
 		}
 	]
 }
