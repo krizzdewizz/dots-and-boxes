@@ -5,7 +5,6 @@
 
       <ng-container *ngIf="notJoined; else waitingForMorePlayers">
 
-        <!-- <button (click)="restart()">Restart</button> -->
         <div>
           <input [(ngModel)]="playerName" type="text">
           <button (click)="join()">Beitreten</button>
@@ -20,28 +19,33 @@
     </div>
 
     <div *ngSwitchCase="GameState.PLAYING">
-
       <div *ngIf="false; else score"></div>
+    </div>
 
+    <div *ngSwitchCase="GameState.ENDED">
+      <div *ngIf="false; else score"></div>
     </div>
   </div>
 
   <dab-board (clickLine)="onClickLine($event)" [board]="game.board" [disabled]="boardDisabled"
     [player0Turn]="playerTurn(0)" [player1Turn]="playerTurn(1)"></dab-board>
 
+  <button (click)="restart()">Neu beginnen</button>
 </ng-container>
 
 <ng-template #score>
   <div class="score">
 
-    <div class="score-card player-1" [class.active]="game.currentPlayer === 0">
+    <div class="score-card player-1" [class.active]="playerActive(0)">
       <div>{{ game.players[0]?.name }}</div>
-      <span>{{ game.countBoxesOwnedBy[0] }}</span>
+      <span>{{ game.countBoxesOwnedBy[0] || 0 }}</span>
+      <img *ngIf="playerActive(0) && game.state === GameState.ENDED" src="assets/images/pokal.png">
     </div>
 
-    <div class="score-card player-2" [class.active]="game.currentPlayer === 1">
+    <div class="score-card player-2" [class.active]="playerActive(1)">
       <div>{{ game.players[1]?.name }}</div>
-      <span>{{ game.countBoxesOwnedBy[1] }}</span>
+      <span>{{ game.countBoxesOwnedBy[1] || 0 }}</span>
+      <img *ngIf="playerActive(1) && game.state === GameState.ENDED" src="assets/images/pokal.png">
     </div>
   </div>
 </ng-template>
@@ -52,29 +56,4 @@
 
 <ng-template #waitingForMorePlayers>
   <div>Warte auf noch mehr Spieler</div>
-</ng-template>
-
-<ng-template #gameReady>
-
-  <div class="hud">
-    <div class="hud-player" [class.hud-player1]="currentPlayer === 0">{{game.players[0]?.name}}
-      <span> - {{countBoxesOwnedBy(0)}}</span>
-    </div>
-    <div class="hud-player" [class.hud-player2]="currentPlayer === 1">{{game.players[1]?.name}}
-      <span> - {{countBoxesOwnedBy(1)}}</span>
-    </div>
-
-    <div *ngIf="game.winners.length" class="hud-winner">WINNER:
-
-      <ng-container *ngFor="let winner of game.winners">
-        {{game.players[winner].name}}
-      </ng-container>
-
-    </div>
-
-  </div>
-
-  <pre>PL: {{gameService.currentPlayer?.name}}</pre>
-
-
 </ng-template>

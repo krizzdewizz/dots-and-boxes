@@ -39,6 +39,14 @@ export class GameComponent {
     return this.gameService.isPlayerTurn(index);
   }
 
+  playerActive(index: PlayerIndex): boolean {
+    const { game } = this;
+    if (game.state === GameState.ENDED) {
+      return game.winners.includes(index);
+    }
+    return game.currentPlayer === index;
+  }
+
   join() {
     this.gameService.join({ name: this.playerName });
   }
