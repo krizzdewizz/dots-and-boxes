@@ -59,12 +59,6 @@ export class GameService {
     return id;
   }
 
-  private updateReady() {
-    if (this.players.length >= 2) {
-      this.game.state = GameState.READY;
-    }
-  }
-
   handle(msg: ClientSentEvent): { ok: boolean, data?: ServerSentEvent } {
     if (msg.clickLine) {
       const { row, box, line, playerId } = msg.clickLine;
@@ -101,22 +95,31 @@ export class GameService {
       return;
     }
 
-    line.owner = game.currentPlayer;
+    line.o = game.currentPlayer;
 
-    let ownsNewBox = false;
+    let boxCompleted = false;
     game.board.forEach(row =>
       row
-        .filter(box => box.owner === undefined && boardService.boxComplete(box))
+        .filter(box => box.o === undefined && boardService.boxComplete(box))
         .forEach(box => {
-          box.owner = currentPlayer;
-          ownsNewBox = true;
+          box.o = currentPlayer;
+          boxCompleted = true;
         }));
 
-    this.updateCountBoxesOwnedBy();
+    if (boxCompleted) {
+      this.updateCountBoxesOwnedByCurrentPlayer();
+    }
+
     this.checkWinners();
 
-    if (game.state === GameState.PLAYING && !ownsNewBox) {
+    if (game.state === GameState.PLAYING && !boxCompleted) {
       this.nextPlayer();
+    }
+  }
+
+  private updateReady() {
+    if (this.players.length >= 2) {
+      this.game.state = GameState.READY;
     }
   }
 
@@ -129,11 +132,11 @@ export class GameService {
     }
   }
 
-  updateCountBoxesOwnedBy() {
+  private updateCountBoxesOwnedByCurrentPlayer() {
     const { game } = this;
     const { currentPlayer } = game;
     const count = game.board.reduce((prev, curr) =>
-      curr.filter(box => box.owner === currentPlayer).length + prev, 0);
+      curr.filter(box => box.o === currentPlayer).length + prev, 0);
 
     game.countBoxesOwnedBy[currentPlayer] = count;
   }
@@ -144,21 +147,24 @@ export class GameService {
       return;
     }
 
-    let max = 0;
+    const { game } = this;
+    const { countBoxesOwnedBy } = game;
     const winners: PlayerIndex[] = [];
-    const { countBoxesOwnedBy } = this.game;
-    const playerIndices = Object.keys(countBoxesOwnedBy);
-    playerIndices.forEach(player => max = Math.max(max, countBoxesOwnedBy[player]));
+    const players = Object.keys(countBoxesOwnedBy);
 
-    playerIndices.forEach(player => {
+    const max = players
+      .map(player => countBoxesOwnedBy[player])
+      .reduce((prev, count) => Math.max(prev, count), 0);
+
+    players.forEach(player => {
       const count = countBoxesOwnedBy[player];
       if (count === max) {
         winners.push(Number(player));
       }
     });
 
-    this.game.state = GameState.ENDED;
-    this.game.winners = winners;
+    game.state = GameState.ENDED;
+    game.winners = winners;
     log('game end');
   }
 }

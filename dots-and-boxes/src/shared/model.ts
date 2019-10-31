@@ -6,16 +6,18 @@ export interface Player {
 export type PlayerIndex = number;
 
 export interface Line {
-    boundary?: boolean;
-    owner?: PlayerIndex;
+    b?: number; // boundary, 0 == false, 1 == true
+    o?: PlayerIndex; // owner
 }
 
+export type LineName = 't' | 'l' | 'b' | 'r';
+
 export interface Box {
-    top: Line;
-    left: Line;
-    bottom: Line;
-    right: Line;
-    owner?: PlayerIndex;
+    t: Line; // top
+    l: Line; // left
+    b: Line; // bottom
+    r: Line; // right
+    o?: PlayerIndex; // owner
 }
 
 export type Row = Box[];
@@ -47,7 +49,7 @@ export interface ClientSentEvent {
         playerId: number;
         row: number;
         box: number;
-        line: 'top' | 'left' | 'bottom' | 'right';
+        line: LineName;
     };
     restart?: true;
 }

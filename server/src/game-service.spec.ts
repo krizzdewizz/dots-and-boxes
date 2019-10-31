@@ -62,24 +62,24 @@ describe('GameService', () => {
         service.game.currentPlayer = 1;
         expect(service.game.state).toBe(GameState.PLAYING);
 
-        service.handle({ clickLine: { playerId: petraId, row: 0, box: 0, line: 'right' } });
-        expect(service.game.countBoxesOwnedBy).toEqual({ 1: 0 });
+        service.handle({ clickLine: { playerId: petraId, row: 0, box: 0, line: 'r' } });
+        expect(service.game.countBoxesOwnedBy).toEqual({});
 
         // krizz's turn
         expect(service.game.currentPlayer).toBe(0);
 
         // filled box 0/0
-        service.handle({ clickLine: { playerId: krizzId, row: 0, box: 0, line: 'bottom' } });
-        expect(service.game.countBoxesOwnedBy).toEqual({ 0: 1, 1: 0 });
+        service.handle({ clickLine: { playerId: krizzId, row: 0, box: 0, line: 'b' } });
+        expect(service.game.countBoxesOwnedBy).toEqual({ 0: 1 });
 
         // still krizz's turn
         expect(service.game.currentPlayer).toBe(0);
 
-        service.handle({ clickLine: { playerId: krizzId, row: 1, box: 0, line: 'right' } });
-        expect(service.game.countBoxesOwnedBy).toEqual({ 0: 2, 1: 0 });
+        service.handle({ clickLine: { playerId: krizzId, row: 1, box: 0, line: 'r' } });
+        expect(service.game.countBoxesOwnedBy).toEqual({ 0: 2 });
 
-        service.handle({ clickLine: { playerId: krizzId, row: 1, box: 1, line: 'top' } });
-        expect(service.game.countBoxesOwnedBy).toEqual({ 0: 4, 1: 0 });
+        service.handle({ clickLine: { playerId: krizzId, row: 1, box: 1, line: 't' } });
+        expect(service.game.countBoxesOwnedBy).toEqual({ 0: 4 });
 
         expect(service.game.state).toBe(GameState.ENDED);
         expect(service.game.winners).toEqual([0]);
@@ -105,11 +105,11 @@ describe('GameService', () => {
 
         const completeBox = (row, box, owner) => {
             const b = board[row][box];
-            b.owner = owner;
-            b.top.owner = owner;
-            b.bottom.owner = owner;
-            b.left.owner = owner;
-            b.right.owner = owner;
+            b.o = owner;
+            b.t.o = owner;
+            b.b.o = owner;
+            b.l.o = owner;
+            b.r.o = owner;
         };
 
         completeBox(0, 0, 0);

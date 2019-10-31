@@ -10,18 +10,18 @@ describe('BoardService', () => {
         const [row0, row1] = board;
         const [box00, box01, box02] = row0;
 
-        expect(box00.left.boundary).toBe(true);
-        expect(box00.top.boundary).toBe(true);
-        expect(box00.right.boundary).toBeFalsy();
-        expect(box00.bottom.boundary).toBeFalsy();
+        expect(box00.l.b).toBeTruthy();
+        expect(box00.t.b).toBeTruthy();
+        expect(box00.r.b).toBeFalsy();
+        expect(box00.b.b).toBeFalsy();
 
-        expect(box00.right).toBe(box01.left);
-        expect(box01.right).toBe(box02.left);
+        expect(box00.r).toBe(box01.l);
+        expect(box01.r).toBe(box02.l);
 
 
         const [box10, box11] = row1;
 
-        expect(box00.bottom).toBe(box10.top);
-        expect(box01.bottom).toBe(box11.top);
+        expect(box00.b).toBe(box10.t);
+        expect(box01.b).toBe(box11.t);
     });
 });

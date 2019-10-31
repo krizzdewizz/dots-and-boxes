@@ -1,11 +1,11 @@
-import { Board, Box, Row, Line } from '@shared/model';
+import { Board, Box, Row, Line, LineName } from '@shared/model';
 
 function newBox(): Box {
   return {
-    top: {},
-    left: {},
-    bottom: {},
-    right: {},
+    t: {},
+    l: {},
+    b: {},
+    r: {},
   };
 }
 
@@ -13,22 +13,22 @@ function joinBoxesLeftRight(left: Box, right: Box) {
   if (!left) {
     return;
   }
-  left.right = right.left;
+  left.r = right.l;
 }
 
 function joinBoxesTopBottom(top: Box, bottom: Box) {
-  top.bottom = bottom.top;
+  top.b = bottom.t;
 }
 
 export function lineComplete(line: Line): boolean {
-  return line.boundary || line.owner !== undefined;
+  return Boolean(line.b) || line.o !== undefined;
 }
 
 export function boxComplete(box: Box): boolean {
-  return lineComplete(box.top)
-    && lineComplete(box.left)
-    && lineComplete(box.bottom)
-    && lineComplete(box.right);
+  return lineComplete(box.t)
+    && lineComplete(box.l)
+    && lineComplete(box.b)
+    && lineComplete(box.r);
 }
 
 export function newBoard(size: number): Board {
@@ -40,15 +40,15 @@ export function newBoard(size: number): Board {
       const box = newBox();
 
       if (col === 0) {
-        box.left.boundary = true;
+        box.l.b = 1;
       } else if (col === size - 1) {
-        box.right.boundary = true;
+        box.r.b = 1;
       }
 
       if (row === 0) {
-        box.top.boundary = true;
+        box.t.b = 1;
       } else if (row === size - 1) {
-        box.bottom.boundary = true;
+        box.b.b = 1;
       }
 
       r.push(box);
@@ -82,10 +82,10 @@ export function joinBoxes(board: Board): Board {
   return board;
 }
 
-export function isBoundaryOwner({ left, right, top, bottom }: Box): boolean {
-  return left.boundary && right.boundary && top.boundary && bottom.boundary;
+export function isBoundaryOwner({ l, r, t, b }: Box): boolean {
+  return Boolean(l.b && r.b && t.b && b.b);
 }
 
-export function getLine(board: Board, row: number, box: number, line: string): Line {
+export function getLine(board: Board, row: number, box: number, line: LineName): Line {
   return board[row][box][line];
 }

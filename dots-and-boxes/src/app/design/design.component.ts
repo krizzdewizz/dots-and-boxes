@@ -20,7 +20,7 @@ export class DesignComponent implements OnInit {
 
   onClickLine({ row, box, line }) {
     const lineObj = boardService.getLine(this.board, row, box, line);
-    lineObj.boundary = !lineObj.boundary;
+    lineObj.b = lineObj.b ? 0 : 1; // invert
     this.designService.saveBoard();
   }
 }

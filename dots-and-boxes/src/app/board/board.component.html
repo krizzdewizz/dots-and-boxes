@@ -2,13 +2,13 @@
     <div class="col" *ngFor="let box of row; let boxIndex = index; let lastBox = last">
       <div *ngFor="let line of lines(box)"
         (click)="onClickLine(rowIndex, boxIndex, line.name)"
-        [class]="line.name"
+        [class]="line.class"
         [class.line]="true"
-        [class.line-free]="line.owner === undefined && !line.boundary"
-        [class.boundary]="line.boundary"
-        [class.player1]="line.owner === 0"
-        [class.player2]="line.owner === 1"></div>
-      <span *ngIf="box.owner !== undefined" [class.cross-player1]="box.owner === 0" [class.cross-player2]="box.owner === 1" class="cross"></span>
+        [class.line-free]="line.o === undefined && !line.b"
+        [class.boundary]="line.b"
+        [class.player1]="line.o === 0"
+        [class.player2]="line.o === 1"></div>
+      <span *ngIf="box.o !== undefined" [class.cross-player1]="box.o === 0" [class.cross-player2]="box.o === 1" class="cross"></span>
       <div class="dot"></div>
       <div *ngIf="lastRow" class="dot dot-bottom"></div>
       <div *ngIf="lastBox" class="dot dot-right"></div>

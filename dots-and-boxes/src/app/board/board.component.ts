@@ -1,7 +1,12 @@
 import { Component, HostBinding, Input, Output, EventEmitter } from '@angular/core';
-import { Board, Box } from '@shared/model';
+import { Board, Box, LineName, Line } from '@shared/model';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as boardService from '@shared/board.service';
+
+interface LineItem extends Line {
+  class: string;
+  name: LineName;
+}
 
 @Component({
   selector: 'dab-board',
@@ -39,21 +44,21 @@ export class BoardComponent {
   @Input() player0Turn = false;
   @Input() player1Turn = false;
 
-  @Output() clickLine = new EventEmitter();
+  @Output() clickLine = new EventEmitter<{ row: number, box: number, line: LineName }>();
 
   constructor(private sanitizer: DomSanitizer) {
   }
 
-  lines(box: Box) {
+  lines(box: Box): LineItem[] {
     return [
-      { name: 'top', ...box.top },
-      { name: 'left', ...box.left },
-      { name: 'bottom', ...box.bottom },
-      { name: 'right', ...box.right }
+      { name: 't', class: 'top', ...box.t },
+      { name: 'l', class: 'left', ...box.l },
+      { name: 'b', class: 'bottom', ...box.b },
+      { name: 'r', class: 'right', ...box.r }
     ];
   }
 
-  onClickLine(row: number, box: number, line: string) {
+  onClickLine(row: number, box: number, line: LineName) {
     if (this.disabled) {
       return;
     }
