@@ -17,16 +17,17 @@ function joinBoxesLeftRight(left, right) {
 function joinBoxesTopBottom(top, bottom) {
     top.bottom = bottom.top;
 }
-function addRow(board, row) {
-    var topRow = board[board.length - 1];
-    if (topRow) {
-        topRow.forEach(function (topBox, colIndex) {
-            var box = row[colIndex];
-            joinBoxesTopBottom(topBox, box);
-        });
-    }
-    board.push(row);
+function lineComplete(line) {
+    return line.boundary || line.owner !== undefined;
 }
+exports.lineComplete = lineComplete;
+function boxComplete(box) {
+    return lineComplete(box.top)
+        && lineComplete(box.left)
+        && lineComplete(box.bottom)
+        && lineComplete(box.right);
+}
+exports.boxComplete = boxComplete;
 var BoardService = /** @class */ (function () {
     function BoardService() {
     }
@@ -34,11 +35,8 @@ var BoardService = /** @class */ (function () {
         var board = [];
         for (var row = 0; row < size; row++) {
             var r = [];
-            var prevBox = void 0;
             for (var col = 0; col < size; col++) {
                 var box = newBox();
-                joinBoxesLeftRight(prevBox, box);
-                prevBox = box;
                 if (col === 0) {
                     box.left.boundary = true;
                 }
@@ -53,13 +51,34 @@ var BoardService = /** @class */ (function () {
                 }
                 r.push(box);
             }
-            addRow(board, r);
+            board.push(r);
         }
+        return this.joinBoxes(board);
+    };
+    BoardService.prototype.joinBoxes = function (board) {
+        var prevRow;
+        board.forEach(function (row) {
+            var prevBox;
+            row.forEach(function (box) {
+                joinBoxesLeftRight(prevBox, box);
+                prevBox = box;
+            });
+            if (prevRow) {
+                prevRow.forEach(function (topBox, colIndex) {
+                    var box = row[colIndex];
+                    joinBoxesTopBottom(topBox, box);
+                });
+            }
+            prevRow = row;
+        });
         return board;
     };
     BoardService.prototype.isBoundaryOwner = function (_a) {
         var left = _a.left, right = _a.right, top = _a.top, bottom = _a.bottom;
         return left.boundary && right.boundary && top.boundary && bottom.boundary;
+    };
+    BoardService.prototype.getLine = function (board, row, box, line) {
+        return board[row][box][line];
     };
     BoardService.INSTANCE = new BoardService();
     return BoardService;

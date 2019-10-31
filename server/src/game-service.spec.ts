@@ -1,5 +1,5 @@
-import { GameService } from "./game.service";
-import { GameState } from "../../dots-and-boxes/src/app/model/model";
+import { GameService } from './game.service';
+import { GameState } from '@shared/model';
 import { sleep } from './util/util';
 
 describe('GameService', () => {

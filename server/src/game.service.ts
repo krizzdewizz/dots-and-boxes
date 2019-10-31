@@ -1,7 +1,6 @@
-import { Player, Line, Game, GameState, PlayerIndex } from './model';
-import { BoardService, lineComplete, boxComplete } from './board.service';
+import { ClientSentEvent, ServerSentEvent, Player, Line, Game, GameState, PlayerIndex } from '@shared/model';
+import { BoardService, lineComplete, boxComplete } from '@shared/board.service';
 import { copyObj, log } from './util/util';
-import { ClientSentEvent, ServerSentEvent } from '../../dots-and-boxes/src/app/model/model';
 
 const OK = { ok: true };
 

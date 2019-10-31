@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Board, Line } from '../model/model';
+import { Board, Line } from '@shared/model';
 import { DesignService } from '../services/design.service';
-import { BoardService } from '../services/board.service';
+import { BoardService } from '@shared/board.service';
 
 @Component({
   selector: 'dab-design',

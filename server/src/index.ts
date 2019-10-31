@@ -1,6 +1,6 @@
-import { GameService } from "./game.service";
-import { ServerSentEvent } from "../../dots-and-boxes/src/app/model/model";
-import { log } from "./util/util";
+import { GameService } from './game.service';
+import { ServerSentEvent } from '@shared/model';
+import { log } from './util/util';
 
 declare const require;
 const express = require('express');

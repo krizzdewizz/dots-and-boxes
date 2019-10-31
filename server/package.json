@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index",
+    "start": "tsc -p . && node src/index",
     "tsc:watch": "tsc -p . -w",
     "test": "jest"
   },
@@ -18,7 +18,8 @@
     "@types/jest": "^24.0.21",
     "jest": "^24.9.0",
     "jest-preset-angular": "^8.0.0",
-    "ts-jest": "^24.1.0"
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.4"
   },
   "jest": {
     "roots": [
@@ -26,6 +27,9 @@
     ],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
+    },
+    "moduleNameMapper": {
+      "^@shared/(.*)$": "<rootDir>/../dots-and-boxes/src/shared/$1"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
     "moduleFileExtensions": [

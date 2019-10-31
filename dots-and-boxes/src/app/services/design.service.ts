@@ -1,6 +1,6 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Game, Player, GameState, PlayerIndex, ClientSentEvent, Box, ServerSentEvent, Line, Board } from '../model/model';
-import { BoardService, lineComplete } from './board.service';
+import { Injectable } from '@angular/core';
+import { BoardService } from '@shared/board.service';
+import { Board } from '@shared/model';
 
 const LAST_BOARD_KEY = 'dab-design-board';
 

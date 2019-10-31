@@ -1,4 +1,4 @@
-import { Board, Box, Row, Line } from '../model/model';
+import { Board, Box, Row, Line } from '@shared/model';
 
 function newBox(): Box {
   return {

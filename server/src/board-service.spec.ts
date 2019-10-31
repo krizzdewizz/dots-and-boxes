@@ -1,4 +1,4 @@
-import { BoardService } from "./board.service";
+import { BoardService } from "@shared/board.service";
 
 describe('BoardService', () => {
 

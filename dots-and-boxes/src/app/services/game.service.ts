@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Game, Player, GameState, PlayerIndex, ClientSentEvent, Box, ServerSentEvent, Line } from '../model/model';
-import { BoardService, lineComplete } from './board.service';
+import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent } from '@shared/model';
+import { BoardService, lineComplete } from '@shared/board.service';
 
 const LAST_PLAYER_ID_KEY = 'dab-player-id';
 

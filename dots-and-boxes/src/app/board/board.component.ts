@@ -1,7 +1,7 @@
 import { Component, HostBinding, Input, Output, EventEmitter } from '@angular/core';
-import { Board, Box } from '../model/model';
+import { Board, Box } from '@shared/model';
 import { DomSanitizer } from '@angular/platform-browser';
-import { BoardService } from '../services/board.service';
+import { BoardService } from '@shared/board.service';
 
 @Component({
   selector: 'dab-board',

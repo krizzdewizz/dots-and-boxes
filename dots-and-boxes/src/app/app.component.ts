@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { GameService } from './services/game.service';
-import { GameState } from './model/model';
+import { GameState } from '@shared/model';
 
 @Component({
   selector: 'dab-root',
