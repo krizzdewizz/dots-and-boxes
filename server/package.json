@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run tsc && node -r tsconfig-paths/register out/server/src/index",
+    "start": "npm run build && node out/server/src/index",
     "tsc:watch": "tsc -p . -w",
-    "tsc": "tsc -p .",
+    "build": "del-cli out/** && tsc -p .",
+    "postbuild": "node scripts/replace-imports",
     "test": "jest"
   },
   "author": "",
@@ -20,10 +21,11 @@
     "@types/jest": "^24.0.21",
     "@types/node": "^12.12.3",
     "@types/socket.io": "^2.1.4",
+    "del-cli": "^3.0.0",
     "jest": "^24.9.0",
     "jest-preset-angular": "^8.0.0",
+    "replace-in-file": "^4.2.0",
     "ts-jest": "^24.1.0",
-    "tsconfig-paths": "^3.9.0",
     "typescript": "^3.6.4"
   },
   "jest": {
