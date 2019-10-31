@@ -9,12 +9,18 @@ import { GameService } from '../services/game.service';
 })
 export class GameComponent {
 
+  playerName: string;
+
   GameState = GameState;
 
-  constructor(private gameService: GameService) { }
+  constructor(public gameService: GameService) { }
 
   get game(): Game {
     return this.gameService.game;
+  }
+
+  get notJoined(): boolean {
+    return !this.gameService.playerId;
   }
 
   get currentPlayer(): PlayerIndex {
@@ -25,15 +31,23 @@ export class GameComponent {
     this.gameService.click(row, box, line);
   }
 
-  countBoxesOwnedBy(player: PlayerIndex): number {
-    return this.gameService.game.countBoxesOwnedBy[player];
-  }
-
   get boardDisabled(): boolean {
     return !this.gameService.isMyTurn;
   }
 
   playerTurn(index: PlayerIndex): boolean {
     return this.gameService.isPlayerTurn(index);
+  }
+
+  join() {
+    this.gameService.join({ name: this.playerName });
+  }
+
+  restart() {
+    this.gameService.restart();
+  }
+
+  start() {
+    this.gameService.start();
   }
 }

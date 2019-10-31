@@ -15,21 +15,39 @@ export class GameService {
 
   onGame = new EventEmitter<Game>();
   playerId: number;
+  private lastPlayerId: number;
 
   private ws: SocketIOClient.Socket;
 
   init() {
-    this.playerId = Number(localStorage.getItem(LAST_PLAYER_ID_KEY));
+    this.lastPlayerId = Number(localStorage.getItem(LAST_PLAYER_ID_KEY));
 
     this.ws = io(environment.socketUrl);
     this.ws.on('dab-message', (message: ServerSentEvent) => {
       if (message.game) {
-        this.onGame.next(this.game = message.game);
+        this.game = message.game;
+        this.findPlayerInGame();
+        this.onGame.next(this.game);
       } else if (message.playerId) {
-        this.playerId = message.playerId;
-        localStorage.setItem(LAST_PLAYER_ID_KEY, String(message.playerId));
+        this.playerId = this.lastPlayerId = message.playerId;
+        localStorage.setItem(LAST_PLAYER_ID_KEY, String(this.lastPlayerId));
       }
     });
+  }
+
+  private findPlayerInGame() {
+    const { game, lastPlayerId } = this;
+    if (!lastPlayerId) {
+      return;
+    }
+
+    if (game.players.some(player => player.id === lastPlayerId)) {
+      this.playerId = lastPlayerId;
+    }
+  }
+
+  get hasJoined(): boolean {
+    return !!this.playerId;
   }
 
   restart() {
