@@ -147,11 +147,13 @@ export class GameService {
     let max = 0;
     const winners: PlayerIndex[] = [];
     const { countBoxesOwnedBy } = this.game;
-    Object.keys(countBoxesOwnedBy).forEach(playerIndex => {
-      const count = countBoxesOwnedBy[playerIndex];
-      if (count >= max) {
-        winners.push(Number(playerIndex));
-        max = count;
+    const playerIndices = Object.keys(countBoxesOwnedBy);
+    playerIndices.forEach(player => max = Math.max(max, countBoxesOwnedBy[player]));
+
+    playerIndices.forEach(player => {
+      const count = countBoxesOwnedBy[player];
+      if (count === max) {
+        winners.push(Number(player));
       }
     });
 

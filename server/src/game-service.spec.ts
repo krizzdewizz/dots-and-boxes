@@ -1,6 +1,7 @@
 import { GameService } from './game.service';
 import { GameState } from '@shared/model';
 import { sleep } from './util/util';
+import * as boardService from '@shared/board.service';
 
 describe('GameService', () => {
 
@@ -97,6 +98,34 @@ describe('GameService', () => {
 
         expect(service.game.state).toBe(GameState.PLAYING);
         expect(service.game.board.length).toBe(2);
+    });
 
+    it('should check winners', () => {
+        const board = boardService.newBoard(2);
+
+        const completeBox = (row, box, owner) => {
+            const b = board[row][box];
+            b.owner = owner;
+            b.top.owner = owner;
+            b.bottom.owner = owner;
+            b.left.owner = owner;
+            b.right.owner = owner;
+        };
+
+        completeBox(0, 0, 0);
+        completeBox(0, 1, 1);
+        completeBox(1, 0, 1);
+        completeBox(1, 1, 1);
+
+        service.game = {
+            board,
+            players: [{ name: 'a', id: 1 }, { name: 'b', id: 2 }],
+            countBoxesOwnedBy: { 0: 1, 1: 3 },
+            winners: []
+        } as any;
+
+        service[`checkWinners`]();
+
+        expect(service.game.winners).toEqual([1]);
     });
 });
