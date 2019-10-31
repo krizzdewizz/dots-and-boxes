@@ -7,7 +7,7 @@ const OK = { ok: true };
 export class GameService {
 
   game: Game;
-  private lastBoardSize = 8;
+  private lastBoardSize = 3;
 
   players: Player[] = [];
 
