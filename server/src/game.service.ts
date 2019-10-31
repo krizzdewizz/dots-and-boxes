@@ -8,7 +8,7 @@ const OK = { ok: true };
 export class GameService {
 
   game: Game;
-  private lastBoardSize = 3;
+  private lastBoardSize = 8;
 
   players: Player[] = [];
 
@@ -95,7 +95,8 @@ export class GameService {
       return;
     }
 
-    const currPlayerId = game.players[game.currentPlayer].id;
+    const { currentPlayer } = game;
+    const currPlayerId = game.players[currentPlayer].id;
 
     if (playerId !== currPlayerId) {
       return;
@@ -103,7 +104,6 @@ export class GameService {
 
     line.owner = game.currentPlayer;
 
-    const { currentPlayer } = game;
     let ownsNewBox = false;
     game.board.forEach(row =>
       row
@@ -116,7 +116,7 @@ export class GameService {
     this.updateCountBoxesOwnedBy();
     this.checkWinners();
 
-    if (!ownsNewBox) {
+    if (game.state === GameState.PLAYING && !ownsNewBox) {
       this.nextPlayer();
     }
   }
