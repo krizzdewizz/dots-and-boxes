@@ -23,15 +23,22 @@ export class GameService {
     this.lastPlayerId = Number(localStorage.getItem(LAST_PLAYER_ID_KEY));
 
     this.ws = io(environment.socketUrl);
-    this.ws.on('dab-message', (message: ServerSentEvent) => {
-      if (message.game) {
-        this.game = message.game;
-        this.findPlayerInGame();
-        this.onGame.next(this.game);
-      } else if (message.playerId) {
-        this.playerId = this.lastPlayerId = message.playerId;
-        localStorage.setItem(LAST_PLAYER_ID_KEY, String(this.lastPlayerId));
+    this.ws.on('dab-message', (msg: ServerSentEvent) => {
+      switch (msg.type) {
+        case 'game':
+          this.game = msg.game;
+          this.findPlayerInGame();
+          this.onGame.next(this.game);
+          break;
+        case 'joined':
+          this.playerId = this.lastPlayerId = msg.playerId;
+          localStorage.setItem(LAST_PLAYER_ID_KEY, String(this.lastPlayerId));
+          break;
       }
+    });
+
+    this.ws.on('disconnect', () => {
+      this.reset();
     });
   }
 
@@ -51,7 +58,7 @@ export class GameService {
   }
 
   restart() {
-    this.send({ restart: true } as ClientSentEvent);
+    this.send({ type: 'restartGame' });
   }
 
   click(row: number, box: number, line) {
@@ -62,22 +69,33 @@ export class GameService {
     }
 
     this.send({
-      clickLine: {
-        playerId: this.playerId,
-        row, box, line
-      }
+      type: 'clickLine',
+      playerId: this.playerId,
+      row, box, line
     } as ClientSentEvent);
   }
 
   join(player: Player) {
-    this.send({ join: { player } } as ClientSentEvent);
+    this.send({ type: 'join', player });
+  }
+
+  leave() {
+    this.send({ type: 'leave', playerId: this.playerId });
+    this.reset();
   }
 
   start() {
-    this.send({ startGame: true } as ClientSentEvent);
+    this.send({ type: 'startGame' });
   }
 
-  private send(data) {
+  private reset() {
+    delete this.playerId;
+    delete this.lastPlayerId;
+    delete this.game;
+    localStorage.removeItem(LAST_PLAYER_ID_KEY);
+  }
+
+  private send(data: ClientSentEvent) {
     this.ws.emit('dab-message', data);
   }
 

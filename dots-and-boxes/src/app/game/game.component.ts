@@ -48,7 +48,14 @@ export class GameComponent {
   }
 
   join() {
-    this.gameService.join({ name: this.playerName });
+    const { playerName: name } = this;
+    if (name) {
+      this.gameService.join({ name });
+    }
+  }
+
+  leave() {
+    this.gameService.leave();
   }
 
   restart() {

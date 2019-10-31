@@ -21,8 +21,8 @@ io.on('connection', ws => {
 
     log(`connection++`);
 
-    function send(dest, data: ServerSentEvent = { game: gameService.game }) {
-        dest.emit('dab-message', data);
+    function send(dest, message: ServerSentEvent = { type: 'game', game: gameService.game }) {
+        dest.emit('dab-message', message);
     }
 
     send(ws);
@@ -31,11 +31,11 @@ io.on('connection', ws => {
 
         log(`received:`, msg);
 
-        const { ok, data } = gameService.handle(msg);
+        const { ok, message } = gameService.handle(msg);
         if (ok) {
-            if (data) {
-                log('sending response to client:', data);
-                send(ws, data);
+            if (message) {
+                log('sending response to client:', message);
+                send(ws, message);
             }
             log('sending game state to clients');
             send(io);

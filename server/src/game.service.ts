@@ -1,4 +1,4 @@
-import { ClientSentEvent, ServerSentEvent, Player, Line, Game, GameState, PlayerIndex } from '@shared/model';
+import { ClientSentEvent, ServerSentEvent, Player, Line, Game, GameState, PlayerIndex, Board } from '@shared/model';
 import * as boardService from '@shared/board.service';
 import { copyObj, log } from './util/util';
 
@@ -7,40 +7,71 @@ const OK = { ok: true };
 export class GameService {
 
   game: Game;
-  private lastBoardSize = 3;
 
-  players: Player[] = [];
+  private lastBoardSize = 3;
+  private players: Player[] = [];
+  private lastBoard: Board;
 
   constructor() {
     this.newGame();
   }
 
-  startGame() {
-    this.game.state = GameState.PLAYING;
+  handle(msg: ClientSentEvent): { ok: boolean, message?: ServerSentEvent } {
+    switch (msg.type) {
+      case 'clickLine':
+        const { row, box, line } = msg;
+        const lineObj = boardService.getLine(this.game.board, row, box, line);
+        this.click(msg.playerId, lineObj);
+        return OK;
+      case 'startGame':
+        this.startGame();
+        return OK;
+      case 'restartGame':
+        this.restartGame();
+        return OK;
+      case 'join':
+        const playerId = this.join(msg.player);
+        if (playerId) {
+          return { ...OK, message: { type: 'joined', playerId } };
+        }
+        break;
+      case 'leave':
+        this.leave(msg.playerId);
+        return OK;
+      default: // nok
+    }
+    return { ok: false };
   }
 
-  restart() {
+  private startGame() {
+    this.game.state = GameState.PLAYING;
+    this.game.currentPlayer = 0;
+  }
+
+  private restartGame() {
     this.newGame();
     if (this.game.state === GameState.READY) {
       this.startGame();
     }
   }
 
-  newGame(boardSize = this.lastBoardSize) {
+  private newGame(boardSize = this.lastBoardSize) {
     this.lastBoardSize = boardSize;
     this.game = {
       state: GameState.WAITING_FOR_PLAYERS,
-      currentPlayer: 0,
       countBoxesOwnedBy: {},
       board: boardService.newBoard(boardSize),
       players: copyObj(this.players),
       winners: []
     };
+
+    this.lastBoard = copyObj(this.game.board);
+
     this.updateReady();
   }
 
-  join(player: Player): number {
-    if (!player.name) {
+  private join(player: Player): number {
+    if (!player.name || this.playing) {
       return;
     }
 
@@ -54,37 +85,36 @@ export class GameService {
     const newPlayer = { ...player, id };
 
     this.players.push(newPlayer);
-    this.game.players = copyObj(this.players);
-    this.updateReady();
+    this.updateGamePlayers();
     return id;
   }
 
-  handle(msg: ClientSentEvent): { ok: boolean, data?: ServerSentEvent } {
-    if (msg.clickLine) {
-      const { row, box, line, playerId } = msg.clickLine;
-      const lineObj = boardService.getLine(this.game.board, row, box, line);
-      this.click(playerId, lineObj);
-      return OK;
-    } else if (msg.startGame) {
-      this.startGame();
-      return OK;
-    } else if (msg.restart) {
-      this.restart();
-      return OK;
-    } else if (msg.join) {
-      const playerId = this.join(msg.join.player);
-      if (playerId) {
-        return { ok: true, data: { playerId } };
-      }
-    }
+  private leave(playerId: number) {
+    this.players = this.players.filter(player => player.id !== playerId);
+    this.updateGamePlayers();
 
-    return { ok: false };
+    if (this.game.state === GameState.WAITING_FOR_PLAYERS) {
+      // game aborted
+      this.game.board = copyObj(this.lastBoard);
+      this.game.countBoxesOwnedBy = {};
+      this.game.winners = [];
+      delete this.game.currentPlayer;
+    }
   }
 
-  click(playerId: number, line: Line) {
+  private get playing(): boolean {
+    return this.game && this.game.state === GameState.PLAYING;
+  }
+
+  private updateGamePlayers() {
+    this.game.players = copyObj(this.players);
+    this.updateReady();
+  }
+
+  private click(playerId: number, line: Line) {
     const { game } = this;
 
-    if (game.state !== GameState.PLAYING || boardService.lineComplete(line)) {
+    if (!this.playing || boardService.lineComplete(line)) {
       return;
     }
 
@@ -112,15 +142,13 @@ export class GameService {
 
     this.checkWinners();
 
-    if (game.state === GameState.PLAYING && !boxCompleted) {
+    if (this.playing && !boxCompleted) {
       this.nextPlayer();
     }
   }
 
   private updateReady() {
-    if (this.players.length >= 2) {
-      this.game.state = GameState.READY;
-    }
+    this.game.state = this.players.length < 2 ? GameState.WAITING_FOR_PLAYERS : GameState.READY;
   }
 
   private nextPlayer() {

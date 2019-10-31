@@ -37,20 +37,52 @@ export interface Game {
     players: Player[];
 }
 
-export interface ServerSentEvent {
-    game?: Game;
-    playerId?: number;
+// ServerSentEvents
+
+export interface GameEvent {
+    type: 'game';
+    game: Game;
 }
 
-export interface ClientSentEvent {
-    startGame?: true;
-    join?: { player: Player };
-    clickLine?: {
-        playerId: number;
-        row: number;
-        box: number;
-        line: LineName;
-    };
-    restart?: true;
+export interface JoinedEvent {
+    type: 'joined';
+    playerId: number;
 }
+
+export type ServerSentEvent = GameEvent | JoinedEvent;
+
+// ClientSentEvents
+
+export interface StartGameEvent {
+    type: 'startGame';
+}
+
+export interface RestartGameEvent {
+    type: 'restartGame';
+}
+
+export interface JoinEvent {
+    type: 'join';
+    player: Player;
+}
+
+export interface LeaveEvent {
+    type: 'leave';
+    playerId: number;
+}
+
+export interface ClickLineEvent {
+    type: 'clickLine';
+    playerId: number;
+    row: number;
+    box: number;
+    line: LineName;
+}
+
+export type ClientSentEvent =
+    StartGameEvent
+    | RestartGameEvent
+    | JoinEvent
+    | LeaveEvent
+    | ClickLineEvent;
 
