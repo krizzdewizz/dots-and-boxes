@@ -1,6 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent } from '@shared/model';
 import * as boardService from '@shared/board.service';
+import * as io from 'socket.io-client';
+import { environment } from '../../environments/environment';
 
 const LAST_PLAYER_ID_KEY = 'dab-player-id';
 
@@ -14,35 +16,20 @@ export class GameService {
   onGame = new EventEmitter<Game>();
   playerId: number;
 
-  private ws: WebSocket;
+  private ws: SocketIOClient.Socket;
 
   init() {
-
     this.playerId = Number(localStorage.getItem(LAST_PLAYER_ID_KEY));
 
-    this.ws = new WebSocket(`ws://${location.host}/api`);
-    this.ws.onopen = () => console.log('websocket is connected');
-    this.ws.onmessage = message => {
-      console.log('client received:', message, 'typeof data: ', typeof message.data);
-      if (typeof message.data !== 'string') {
-        return;
+    this.ws = io(environment.socketUrl);
+    this.ws.on('dab-message', (message: ServerSentEvent) => {
+      if (message.game) {
+        this.onGame.next(this.game = message.game);
+      } else if (message.playerId) {
+        this.playerId = message.playerId;
+        localStorage.setItem(LAST_PLAYER_ID_KEY, String(message.playerId));
       }
-      let data: ServerSentEvent;
-      try {
-        data = JSON.parse(message.data);
-      } catch (err) {
-        console.error('error while parsing websocket message: ', err);
-        return;
-      }
-
-      if (data.game) {
-        this.game = data.game;
-        this.onGame.next(data.game);
-      } else if (data.playerId) {
-        this.playerId = data.playerId;
-        localStorage.setItem(LAST_PLAYER_ID_KEY, String(data.playerId));
-      }
-    };
+    });
   }
 
   restart() {
@@ -73,7 +60,7 @@ export class GameService {
   }
 
   private send(data) {
-    this.ws.send(JSON.stringify(data));
+    this.ws.emit('dab-message', data);
   }
 
   get currentPlayer(): Player {
