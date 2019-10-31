@@ -42,6 +42,8 @@
       <img *ngIf="playerActive(0) && game.state === GameState.ENDED" src="assets/images/pokal.png">
     </div>
 
+    <span class="versus">vs</span>
+
     <div class="score-card player-2" [class.active]="playerActive(1)">
       <div>{{ game.players[1]?.name }}</div>
       <span>{{ game.countBoxesOwnedBy[1] || 0 }}</span>
