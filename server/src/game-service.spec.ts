@@ -98,5 +98,5 @@ describe('GameService', () => {
         expect(service.game.state).toBe(GameState.PLAYING);
         expect(service.game.board.length).toBe(2);
 
-    })
+    });
 });

@@ -8,6 +8,7 @@
     "tsc:watch": "tsc -p . -w",
     "build": "del-cli out/** && tsc -p .",
     "postbuild": "node scripts/replace-imports",
+    "lint": "tslint --project .",
     "test": "jest"
   },
   "author": "",
@@ -26,6 +27,7 @@
     "jest-preset-angular": "^8.0.0",
     "replace-in-file": "^4.2.0",
     "ts-jest": "^24.1.0",
+    "tslint": "5.15.0",
     "typescript": "^3.6.4"
   },
   "jest": {

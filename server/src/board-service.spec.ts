@@ -8,20 +8,20 @@ describe('BoardService', () => {
         board.forEach(row => expect(row.length).toBe(size));
 
         const [row0, row1] = board;
-        const [box0_0, box0_1, box0_2] = row0;
+        const [box00, box01, box02] = row0;
 
-        expect(box0_0.left.boundary).toBe(true);
-        expect(box0_0.top.boundary).toBe(true);
-        expect(box0_0.right.boundary).toBeFalsy();
-        expect(box0_0.bottom.boundary).toBeFalsy();
+        expect(box00.left.boundary).toBe(true);
+        expect(box00.top.boundary).toBe(true);
+        expect(box00.right.boundary).toBeFalsy();
+        expect(box00.bottom.boundary).toBeFalsy();
 
-        expect(box0_0.right).toBe(box0_1.left);
-        expect(box0_1.right).toBe(box0_2.left);
+        expect(box00.right).toBe(box01.left);
+        expect(box01.right).toBe(box02.left);
 
 
-        const [box1_0, box1_1] = row1;
+        const [box10, box11] = row1;
 
-        expect(box0_0.bottom).toBe(box1_0.top);
-        expect(box0_1.bottom).toBe(box1_1.top);
+        expect(box00.bottom).toBe(box10.top);
+        expect(box01.bottom).toBe(box11.top);
     });
 });

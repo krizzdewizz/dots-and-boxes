@@ -145,7 +145,7 @@ export class GameService {
     }
 
     let max = 0;
-    let winners: PlayerIndex[] = [];
+    const winners: PlayerIndex[] = [];
     const { countBoxesOwnedBy } = this.game;
     Object.keys(countBoxesOwnedBy).forEach(playerIndex => {
       const count = countBoxesOwnedBy[playerIndex];

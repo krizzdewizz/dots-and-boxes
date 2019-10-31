@@ -1,4 +1,4 @@
-import { copyObj } from "./util"
+import { copyObj } from './util';
 
 describe('util', () => {
 
@@ -6,6 +6,6 @@ describe('util', () => {
         const obj = { a: 7 };
         const copy = copyObj(obj);
         expect(copy).toEqual(obj);
-    })
+    });
 
-})
+});
