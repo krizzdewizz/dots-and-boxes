@@ -47,7 +47,7 @@ export interface ClientSentEvent {
         playerId: number;
         row: number;
         box: number;
-        line: keyof Box; // w/o owner
+        line: 'top' | 'left' | 'bottom' | 'right';
     };
     restart?: true;
 }

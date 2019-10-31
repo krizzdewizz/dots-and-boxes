@@ -3,6 +3,7 @@
     "baseUrl": "./",
     "target": "ESNEXT",
     "module": "commonjs",
+    "outDir": "./out",
     "lib": [
       "es2017",
       "dom"

@@ -139,7 +139,7 @@ export class GameService {
   }
 
   private checkWinners() {
-    const hasFreeBoxes = this.game.board.some(row => row.some(box => box.owner === undefined));
+    const hasFreeBoxes = this.game.board.some(row => row.some(box => !boardService.boxComplete(box)));
     if (hasFreeBoxes) {
       return;
     }

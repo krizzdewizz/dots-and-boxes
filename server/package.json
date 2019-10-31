@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc -p . && node -r tsconfig-paths/register src/index",
+    "start": "npm run tsc && node -r tsconfig-paths/register out/server/src/index",
     "tsc:watch": "tsc -p . -w",
+    "tsc": "tsc -p .",
     "test": "jest"
   },
   "author": "",
