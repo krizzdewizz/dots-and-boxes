@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Board, Line } from '@shared/model';
+import { Board } from '@shared/model';
 import { DesignService } from '../services/design.service';
-import { BoardService } from '@shared/board.service';
+import * as boardService from '@shared/board.service';
 
 @Component({
   selector: 'dab-design',
@@ -19,7 +19,7 @@ export class DesignComponent implements OnInit {
   }
 
   onClickLine({ row, box, line }) {
-    const lineObj = BoardService.INSTANCE.getLine(this.board, row, box, line);
+    const lineObj = boardService.getLine(this.board, row, box, line);
     lineObj.boundary = !lineObj.boundary;
     this.designService.saveBoard();
   }

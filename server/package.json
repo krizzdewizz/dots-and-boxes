@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc -p . && node src/index",
+    "start": "tsc -p . && node -r tsconfig-paths/register src/index",
     "tsc:watch": "tsc -p . -w",
     "test": "jest"
   },
@@ -19,6 +19,7 @@
     "jest": "^24.9.0",
     "jest-preset-angular": "^8.0.0",
     "ts-jest": "^24.1.0",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^3.6.4"
   },
   "jest": {

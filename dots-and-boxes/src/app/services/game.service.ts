@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent } from '@shared/model';
-import { BoardService, lineComplete } from '@shared/board.service';
+import * as boardService from '@shared/board.service';
 
 const LAST_PLAYER_ID_KEY = 'dab-player-id';
 
@@ -50,9 +50,9 @@ export class GameService {
   }
 
   click(row: number, box: number, line) {
-    const lineObj: Line = BoardService.INSTANCE.getLine(this.game.board, row, box, line);
+    const lineObj: Line = boardService.getLine(this.game.board, row, box, line);
 
-    if (lineComplete(lineObj)) {
+    if (boardService.lineComplete(lineObj)) {
       return;
     }
 

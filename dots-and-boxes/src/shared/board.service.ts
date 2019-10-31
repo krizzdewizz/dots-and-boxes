@@ -31,68 +31,61 @@ export function boxComplete(box: Box): boolean {
     && lineComplete(box.right);
 }
 
-export class BoardService {
+export function newBoard(size: number): Board {
+  const board: Board = [];
 
-  static readonly INSTANCE = new BoardService();
+  for (let row = 0; row < size; row++) {
+    const r: Row = [];
+    for (let col = 0; col < size; col++) {
+      const box = newBox();
 
-  private constructor() { }
-
-  newBoard(size: number): Board {
-    const board: Board = [];
-
-    for (let row = 0; row < size; row++) {
-      const r: Row = [];
-      for (let col = 0; col < size; col++) {
-        const box = newBox();
-
-        if (col === 0) {
-          box.left.boundary = true;
-        } else if (col === size - 1) {
-          box.right.boundary = true;
-        }
-
-        if (row === 0) {
-          box.top.boundary = true;
-        } else if (row === size - 1) {
-          box.bottom.boundary = true;
-        }
-
-        r.push(box);
+      if (col === 0) {
+        box.left.boundary = true;
+      } else if (col === size - 1) {
+        box.right.boundary = true;
       }
-      board.push(r);
+
+      if (row === 0) {
+        box.top.boundary = true;
+      } else if (row === size - 1) {
+        box.bottom.boundary = true;
+      }
+
+      r.push(box);
+    }
+    board.push(r);
+  }
+
+  return this.joinBoxes(board);
+}
+
+export function joinBoxes(board: Board): Board {
+  let prevRow: Row;
+  board.forEach(row => {
+
+    let prevBox: Box;
+
+    row.forEach(box => {
+      joinBoxesLeftRight(prevBox, box);
+      prevBox = box;
+    });
+
+    if (prevRow) {
+      prevRow.forEach((topBox, colIndex) => {
+        const box = row[colIndex];
+        joinBoxesTopBottom(topBox, box);
+      });
     }
 
-    return this.joinBoxes(board);
-  }
+    prevRow = row;
+  });
+  return board;
+}
 
-  joinBoxes(board: Board): Board {
-    let prevRow: Row;
-    board.forEach(row => {
+export function isBoundaryOwner({ left, right, top, bottom }: Box): boolean {
+  return left.boundary && right.boundary && top.boundary && bottom.boundary;
+}
 
-      let prevBox: Box;
-
-      row.forEach(box => {
-        joinBoxesLeftRight(prevBox, box);
-        prevBox = box;
-      });
-
-      if (prevRow) {
-        prevRow.forEach((topBox, colIndex) => {
-          const box = row[colIndex];
-          joinBoxesTopBottom(topBox, box);
-        });
-      }
-
-      prevRow = row;
-    });
-    return board;
-  }
-
-  isBoundaryOwner({ left, right, top, bottom }: Box): boolean {
-    return left.boundary && right.boundary && top.boundary && bottom.boundary;
-  }
-
-  getLine(board: Board, row: number, box: number, line: string): Line {
-    return board[row][box][line];
-  }
+export function getLine(board: Board, row: number, box: number, line: string): Line {
+  return board[row][box][line];
 }

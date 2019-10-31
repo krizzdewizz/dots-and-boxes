@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BoardService } from '@shared/board.service';
+import * as boardService from '@shared/board.service';
 import { Board } from '@shared/model';
 
 const LAST_BOARD_KEY = 'dab-design-board';
@@ -18,9 +18,9 @@ export class DesignService {
 
     const boardString = localStorage.getItem(LAST_BOARD_KEY);
     if (boardString) {
-      this.$board = BoardService.INSTANCE.joinBoxes(JSON.parse(boardString));
+      this.$board = boardService.joinBoxes(JSON.parse(boardString));
     } else {
-      this.$board = BoardService.INSTANCE.newBoard(4);
+      this.$board = boardService.newBoard(4);
     }
 
     return this.$board;

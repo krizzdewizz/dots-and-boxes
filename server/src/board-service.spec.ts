@@ -1,16 +1,9 @@
-import { BoardService } from "@shared/board.service";
+import * as boardService from '@shared/board.service';
 
 describe('BoardService', () => {
-
-    let service: BoardService;
-
-    beforeEach(() => {
-        service = BoardService.INSTANCE;
-    });
-
     it('should create board', () => {
         const size = 3;
-        const board = service.newBoard(size);
+        const board = boardService.newBoard(size);
         expect(board.length).toBe(size);
         board.forEach(row => expect(row.length).toBe(size));
 

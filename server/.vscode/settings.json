@@ -1,8 +1,7 @@
 {
-    "html.format.wrapAttributes": "auto",
     "files.exclude": {
+        "node_modules": true,
         "**/.git": true,
-        "**/.DS_Store": true,
         "**/*.js": {
             "when": "$(basename).ts"
         },

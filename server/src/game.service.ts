@@ -1,5 +1,5 @@
 import { ClientSentEvent, ServerSentEvent, Player, Line, Game, GameState, PlayerIndex } from '@shared/model';
-import { BoardService, lineComplete, boxComplete } from '@shared/board.service';
+import * as boardService from '@shared/board.service';
 import { copyObj, log } from './util/util';
 
 const OK = { ok: true };
@@ -32,7 +32,7 @@ export class GameService {
       state: GameState.WAITING_FOR_PLAYERS,
       currentPlayer: 0,
       countBoxesOwnedBy: {},
-      board: BoardService.INSTANCE.newBoard(boardSize),
+      board: boardService.newBoard(boardSize),
       players: copyObj(this.players),
       winners: []
     };
@@ -68,7 +68,7 @@ export class GameService {
   handle(msg: ClientSentEvent): { ok: boolean, data?: ServerSentEvent } {
     if (msg.clickLine) {
       const { row, box, line, playerId } = msg.clickLine;
-      const lineObj = BoardService.INSTANCE.getLine(this.game.board, row, box, line);
+      const lineObj = boardService.getLine(this.game.board, row, box, line);
       this.click(playerId, lineObj);
       return OK;
     } else if (msg.startGame) {
@@ -90,7 +90,7 @@ export class GameService {
   click(playerId: number, line: Line) {
     const { game } = this;
 
-    if (game.state !== GameState.PLAYING || lineComplete(line)) {
+    if (game.state !== GameState.PLAYING || boardService.lineComplete(line)) {
       return;
     }
 
@@ -106,7 +106,7 @@ export class GameService {
     let ownsNewBox = false;
     game.board.forEach(row =>
       row
-        .filter(box => box.owner === undefined && boxComplete(box))
+        .filter(box => box.owner === undefined && boardService.boxComplete(box))
         .forEach(box => {
           box.owner = currentPlayer;
           ownsNewBox = true;

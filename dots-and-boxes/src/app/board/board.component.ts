@@ -1,7 +1,7 @@
 import { Component, HostBinding, Input, Output, EventEmitter } from '@angular/core';
 import { Board, Box } from '@shared/model';
 import { DomSanitizer } from '@angular/platform-browser';
-import { BoardService } from '@shared/board.service';
+import * as boardService from '@shared/board.service';
 
 @Component({
   selector: 'dab-board',
@@ -61,6 +61,6 @@ export class BoardComponent {
   }
 
   boundaryOwner(box: Box): boolean {
-    return BoardService.INSTANCE.isBoundaryOwner(box);
+    return boardService.isBoundaryOwner(box);
   }
 }
