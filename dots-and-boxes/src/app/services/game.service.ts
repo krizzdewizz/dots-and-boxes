@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent, ChatMessage } from '@shared/model';
+import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent, ChatMessage, Board } from '@shared/model';
 import * as boardService from '@shared/board.service';
 import * as io from 'socket.io-client';
 import { environment } from '../../environments/environment';
@@ -18,6 +18,17 @@ export class GameService {
   private lastPlayerId: number;
 
   private ws: SocketIOClient.Socket;
+
+  nextBoard: Board;
+
+  sendNextBoard() {
+    const { nextBoard: board } = this;
+    if (!board) {
+      return;
+    }
+    this.send({ type: 'newBoard', board });
+    delete this.nextBoard;
+  }
 
   chat(text: string) {
     this.send({ type: 'chat', message: { sender: this.playerName, text } });

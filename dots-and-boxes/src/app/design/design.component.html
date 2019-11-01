@@ -1,5 +1,25 @@
-<dab-board [board]="board" [design]="true" (clickLine)="onClickLine($event)"></dab-board>
+<div class="palette">
+  <div *ngFor="let size of sizes" (click)="newBoard(size)">
+    {{size}} x {{size}}
+  </div>
+</div>
 
-<!-- <pre>
-    {{board | json}}
-  </pre> -->
+
+<div class="content">
+
+  <div class="tool">
+    <div class="size-width">
+      <button type="button" (click)="sizeWidth(false)">-</button>
+      <button type="button" (click)="sizeWidth(true)">+</button>
+    </div>
+    <div class="size-height">
+      <button type="button" (click)="sizeHeight(false)">-</button>
+      <button type="button" (click)="sizeHeight(true)">+</button>
+    </div>
+  </div>
+
+  <dab-board [board]="board" [design]="true" (clickLine)="onClickLine($event)"></dab-board>
+
+</div>
+<button type="button" (click)="startGame()">Neues Spiel</button>
+

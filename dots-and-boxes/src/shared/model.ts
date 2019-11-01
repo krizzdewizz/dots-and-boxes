@@ -98,11 +98,17 @@ export interface ClickLineEvent {
     line: LineName;
 }
 
+export interface NewBoardEvent {
+    type: 'newBoard';
+    board: Board;
+}
+
 export type ClientSentEvent =
     StartGameEvent
     | RestartGameEvent
     | JoinEvent
     | LeaveEvent
     | ClickLineEvent
+    | NewBoardEvent
     | ChatEvent;
 

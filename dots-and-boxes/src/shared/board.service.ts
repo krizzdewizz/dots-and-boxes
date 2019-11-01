@@ -1,6 +1,6 @@
 import { Board, Box, Row, Line, LineName } from '@shared/model';
 
-function newBox(): Box {
+export function newBox(): Box {
   return {
     t: {},
     l: {},
@@ -31,23 +31,23 @@ export function boxComplete(box: Box): boolean {
     && lineComplete(box.r);
 }
 
-export function newBoard(size: number): Board {
+export function newBoard(width: number, height = width): Board {
   const board: Board = [];
 
-  for (let row = 0; row < size; row++) {
+  for (let row = 0; row < height; row++) {
     const r: Row = [];
-    for (let col = 0; col < size; col++) {
+    for (let col = 0; col < width; col++) {
       const box = newBox();
 
       if (col === 0) {
         box.l.b = 1;
-      } else if (col === size - 1) {
+      } else if (col === width - 1) {
         box.r.b = 1;
       }
 
       if (row === 0) {
         box.t.b = 1;
-      } else if (row === size - 1) {
+      } else if (row === height - 1) {
         box.b.b = 1;
       }
 
@@ -57,6 +57,12 @@ export function newBoard(size: number): Board {
   }
 
   return this.joinBoxes(board);
+}
+
+function setBoxBoundaryOwner(board: Board) {
+  board.forEach(row => row
+    .filter(isBoundaryOwner)
+    .forEach(box => box.o = -1));
 }
 
 export function joinBoxes(board: Board): Board {
@@ -79,6 +85,9 @@ export function joinBoxes(board: Board): Board {
 
     prevRow = row;
   });
+
+  setBoxBoundaryOwner(board);
+
   return board;
 }
 

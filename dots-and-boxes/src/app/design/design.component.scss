@@ -1,0 +1,51 @@
+:host {
+    .tool {
+        display: flex;
+        flex-direction: column;
+
+        button {
+            width: 30px;
+            height: 30px;
+            font-size: 14pt;
+            margin: 2px;
+        }
+    }
+
+    .size-height {
+        margin-top: 50px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .palette {
+        display: flex;
+
+        font-size: 22pt;
+        padding: 10px;
+
+        div {
+            padding: 5px;
+            margin: 5px;
+            width: 80px;
+            height: 80px;
+            white-space: nowrap;
+            border: 1px solid lightgray;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            outline: 1px solid transparent;
+
+            &:hover {
+                border-color: gray;
+                outline: 1px solid gray;
+            }
+        }
+    }
+
+    .content {
+        display: flex;
+    }
+
+}

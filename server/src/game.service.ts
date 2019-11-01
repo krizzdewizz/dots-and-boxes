@@ -8,7 +8,6 @@ export class GameService {
 
   game: Game;
 
-  private lastBoardSize = 3;
   private players: Player[] = [];
   private lastBoard: Board;
 
@@ -40,6 +39,9 @@ export class GameService {
       case 'leave':
         this.leave(msg.playerId);
         return OK;
+      case 'newBoard':
+        this.restartGame(msg.board);
+        return OK;
       case 'chat':
         return { ...OK, toAll: true, message: { type: 'chat', message: msg.message } };
       default: // nok
@@ -52,19 +54,21 @@ export class GameService {
     this.game.currentPlayer = 0;
   }
 
-  private restartGame() {
-    this.newGame();
+  private restartGame(board = this.lastBoard) {
+    this.newGame(board);
     if (this.game.state === GameState.READY) {
       this.startGame();
     }
   }
 
-  private newGame(boardSize = this.lastBoardSize) {
-    this.lastBoardSize = boardSize;
+  private newGame(board = boardService.newBoard(5)) {
+
+    boardService.joinBoxes(board);
+
     this.game = {
       state: GameState.WAITING_FOR_PLAYERS,
       countBoxesOwnedBy: {},
-      board: boardService.newBoard(boardSize),
+      board,
       players: copyObj(this.players),
       winners: []
     };

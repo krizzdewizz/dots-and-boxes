@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GameState, Game, PlayerIndex } from '@shared/model';
 import { GameService } from '../services/game.service';
 
@@ -7,13 +7,17 @@ import { GameService } from '../services/game.service';
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
-export class GameComponent {
+export class GameComponent implements OnInit {
 
   playerName: string;
 
   GameState = GameState;
 
   constructor(public gameService: GameService) { }
+
+  ngOnInit(): void {
+    this.gameService.sendNextBoard();
+  }
 
   get game(): Game {
     return this.gameService.game;
@@ -64,5 +68,9 @@ export class GameComponent {
 
   start() {
     this.gameService.start();
+  }
+
+  newGame() {
+
   }
 }

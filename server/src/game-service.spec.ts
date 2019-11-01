@@ -68,7 +68,7 @@ describe('GameService', () => {
         const petraId = service[`join`]({ name: 'petra' }).playerId;
         expect(service.game.state).toBe(GameState.READY);
 
-        service[`newGame`](2);
+        service[`newGame`](boardService.newBoard(2));
 
         service[`startGame`]();
         // petra's turn
@@ -104,7 +104,7 @@ describe('GameService', () => {
         service[`join`]({ name: 'petra' });
         expect(service.game.state).toBe(GameState.READY);
 
-        service[`newGame`](2);
+        service[`newGame`](boardService.newBoard(2));
 
         service.game.state = GameState.ENDED;
         service[`restartGame`]();
