@@ -6,7 +6,7 @@
       <ng-container *ngIf="!joined; else waitingForMorePlayers">
 
         <form (ngSubmit)="join()">
-          <input placeholder="Name" name="playerName" [(ngModel)]="playerName" type="text">
+          <input placeholder="Name" maxlength="15" name="playerName" [(ngModel)]="playerName" type="text">
           <button type="submit">Beitreten</button>
           <div>{{ gameService.joinError | async }}</div>
         </form>
