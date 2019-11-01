@@ -1,3 +1,5 @@
+export const MAX_PLAYERS = 2;
+
 export interface Player {
     id?: number;
     name: string;
@@ -103,6 +105,10 @@ export interface NewBoardEvent {
     board: Board;
 }
 
+export interface AddBotEvent {
+    type: 'addBot';
+}
+
 export type ClientSentEvent =
     StartGameEvent
     | RestartGameEvent
@@ -110,5 +116,6 @@ export type ClientSentEvent =
     | LeaveEvent
     | ClickLineEvent
     | NewBoardEvent
-    | ChatEvent;
+    | ChatEvent
+    | AddBotEvent;
 

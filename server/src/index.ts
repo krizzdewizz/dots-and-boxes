@@ -1,6 +1,6 @@
 import { GameService } from './game.service';
 import { ServerSentEvent, ClientSentEvent } from '@shared/model';
-import { log } from './util/util';
+import { log } from '@shared/util';
 import express from 'express';
 import http from 'http';
 import socket from 'socket.io';
@@ -17,17 +17,21 @@ const io = socket(server);
 
 const gameService = new GameService();
 
+
+function send(dest, message: ServerSentEvent = { type: 'game', game: gameService.game }) {
+    dest.emit('dab-message', message);
+}
+
+function chat(text: string) {
+    send(io, { type: 'chat', message: { sender: 'sys', text } });
+}
+
+gameService.sendGame = () => send(io);
+gameService.chat = chat;
+
 io.on('connection', ws => {
 
     log(`connection++`);
-
-    function send(dest, message: ServerSentEvent = { type: 'game', game: gameService.game }) {
-        dest.emit('dab-message', message);
-    }
-
-    function chat(text: string) {
-        send(io, { type: 'chat', message: { sender: 'sys', text } });
-    }
 
     send(ws);
 

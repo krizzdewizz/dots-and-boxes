@@ -70,7 +70,7 @@ export class GameComponent implements OnInit {
     this.gameService.start();
   }
 
-  newGame() {
-
+  addBot() {
+    this.gameService.addBot();
   }
 }

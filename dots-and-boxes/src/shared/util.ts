@@ -9,3 +9,7 @@ export function sleep(millis: number): Promise<void> {
 export function log(...args: any[]) {
     console.log(new Date(Date.now()).toISOString(), ...args);
 }
+
+export function random(min, max) {
+    return Math.floor(min + Math.random() * (max - min));
+}

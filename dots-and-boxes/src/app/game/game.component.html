@@ -33,6 +33,7 @@
 
   <button [routerLink]="['design']">Neues Spiel</button>
   <button (click)="restart()">Neu beginnen</button>
+  <button (click)="addBot()">Bot hinzufügen</button>
   <button (click)="leave()">Spiel verlassen</button>
 
   <dab-chat *ngIf="joined"></dab-chat>

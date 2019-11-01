@@ -4,7 +4,7 @@ import * as boardService from '@shared/board.service';
 import { Board } from '@shared/model';
 import { DesignService } from '../services/design.service';
 import { GameService } from '../services/game.service';
-import { copyObj } from '../util/util';
+import { copyObj } from '../../shared/util';
 
 
 @Component({

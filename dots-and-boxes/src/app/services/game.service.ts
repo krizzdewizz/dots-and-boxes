@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent, ChatMessage, Board } from '@shared/model';
+import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent, ChatMessage, Board, MAX_PLAYERS } from '@shared/model';
 import * as boardService from '@shared/board.service';
 import * as io from 'socket.io-client';
 import { environment } from '../../environments/environment';
@@ -111,7 +111,7 @@ export class GameService {
       type: 'clickLine',
       playerId: this.playerId,
       row, box, line
-    } as ClientSentEvent);
+    });
   }
 
   join(player: Player) {
@@ -155,5 +155,13 @@ export class GameService {
 
   isPlayerTurn(player: PlayerIndex): boolean {
     return this.isMyTurn && this.game.currentPlayer === player;
+  }
+
+  addBot() {
+    const { game } = this;
+    if (game.players.length === MAX_PLAYERS) {
+      return;
+    }
+    this.send({ type: 'addBot' });
   }
 }

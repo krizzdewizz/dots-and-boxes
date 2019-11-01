@@ -1,10 +1,13 @@
-import { ClientSentEvent, ServerSentEvent, Player, Line, Game, GameState, PlayerIndex, Board } from '@shared/model';
+import { ClientSentEvent, ServerSentEvent, Player, Line, Game, GameState, PlayerIndex, Board, MAX_PLAYERS } from '@shared/model';
 import * as boardService from '@shared/board.service';
-import { copyObj, log } from './util/util';
+import { copyObj, log } from '@shared/util';
 
 const OK = { ok: true };
 
 export class GameService {
+
+  sendGame: () => void;
+  chat: (text: string) => void;
 
   game: Game;
 
@@ -42,11 +45,28 @@ export class GameService {
       case 'newBoard':
         this.restartGame(msg.board);
         return OK;
+      case 'addBot':
+        this.addBot();
+        return OK;
       case 'chat':
         return { ...OK, toAll: true, message: { type: 'chat', message: msg.message } };
       default: // nok
     }
     return { ok: false };
+  }
+
+  addBot() {
+    const { game } = this;
+    if (game.players.length === MAX_PLAYERS) {
+      return;
+    }
+
+    this.players.push({ id: 1, name: 'bot' });
+    this.updateGamePlayers();
+  }
+
+  private isBot({ id }: Player): boolean {
+    return id < 10;
   }
 
   private startGame() {
@@ -149,8 +169,11 @@ export class GameService {
 
     this.checkWinners();
 
-    if (this.playing && !boxCompleted) {
-      this.nextPlayer();
+    if (this.playing) {
+      if (!boxCompleted) {
+        this.nextPlayer();
+      }
+      this.botTurn(game);
     }
   }
 
@@ -164,6 +187,17 @@ export class GameService {
       game.currentPlayer++;
     } else {
       game.currentPlayer = 0;
+    }
+  }
+
+  private botTurn(game: Game) {
+    const player = game.players[game.currentPlayer];
+    if (this.isBot(player)) {
+      this.chat(`"${player.name}" is thinking...`);
+      setTimeout(() => {
+        this.click(player.id, boardService.findFreeLine(game.board));
+        this.sendGame();
+      }, 1000);
     }
   }
 
@@ -184,22 +218,17 @@ export class GameService {
 
     const { game } = this;
     const { countBoxesOwnedBy } = game;
-    const winners: PlayerIndex[] = [];
     const players = Object.keys(countBoxesOwnedBy);
 
     const max = players
       .map(player => countBoxesOwnedBy[player])
       .reduce((prev, count) => Math.max(prev, count), 0);
 
-    players.forEach(player => {
-      const count = countBoxesOwnedBy[player];
-      if (count === max) {
-        winners.push(Number(player));
-      }
-    });
+    game.winners = players
+      .filter(player => countBoxesOwnedBy[player] === max)
+      .map(Number);
 
     game.state = GameState.ENDED;
-    game.winners = winners;
     log('game end');
   }
 }
