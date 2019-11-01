@@ -1,0 +1,14 @@
+<div class="title">Chat</div>
+
+<div class="messages">
+    <div class="message" *ngFor="let msg of messages">
+        <span>{{msg.sender}}:</span>{{msg.text}}
+    </div>
+</div>
+
+<div>
+    <form (submit)="send()">
+        <input maxlength="120" name="text" type="text" [(ngModel)]="text">
+        <button type="submit">Senden</button>
+    </form>
+</div>

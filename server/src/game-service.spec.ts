@@ -34,25 +34,38 @@ describe('GameService', () => {
     });
 
     it('should join player', () => {
-        expect(service[`join`]({ name: 'krizz' })).toBeDefined();
+        expect(service[`join`]({ name: 'krizz' }).playerId).toBeDefined();
         expect(service.game.players.length).toBe(1);
         expect(service.game.players[0].name).toEqual('krizz');
         expect(service.game.players[0].id).toBeDefined();
         expect(service.game.state).toBe(GameState.WAITING_FOR_PLAYERS);
 
-        expect(service[`join`]({ name: 'Krizz' })).toBeUndefined();
+        expect(service[`join`]({ name: 'Krizz' }).playerId).toBeUndefined();
 
-        expect(service[`join`]({ name: 'petra' })).toBeDefined();
+        expect(service[`join`]({ name: 'petra' }).playerId).toBeDefined();
         expect(service.game.players.length).toBe(2);
         expect(service.game.players.map(p => p.name)).toEqual(['krizz', 'petra']);
         expect(service.game.state).toBe(GameState.READY);
     });
 
+    it('should not join if player exists', () => {
+        expect(service[`join`]({ name: 'krizz' }).playerId).toBeDefined();
+        const secondJoin = service[`join`]({ name: 'krizz' });
+        expect(secondJoin.playerId).toBeUndefined();
+        expect(secondJoin.error).toBeDefined();
+    });
+
+    it('should not join sys', () => {
+        const join = service[`join`]({ name: 'sys' });
+        expect(join.playerId).toBeUndefined();
+        expect(join.error).toBeDefined();
+    });
+
     it('should handle line clicks', async () => {
 
-        const krizzId = service[`join`]({ name: 'krizz' });
+        const krizzId = service[`join`]({ name: 'krizz' }).playerId;
         await sleep(10);
-        const petraId = service[`join`]({ name: 'petra' });
+        const petraId = service[`join`]({ name: 'petra' }).playerId;
         expect(service.game.state).toBe(GameState.READY);
 
         service[`newGame`](2);

@@ -16,7 +16,7 @@ export class GameService {
     this.newGame();
   }
 
-  handle(msg: ClientSentEvent): { ok: boolean, message?: ServerSentEvent } {
+  handle(msg: ClientSentEvent): { ok: boolean, message?: ServerSentEvent, toAll?: boolean } {
     switch (msg.type) {
       case 'clickLine':
         const { row, box, line } = msg;
@@ -30,14 +30,18 @@ export class GameService {
         this.restartGame();
         return OK;
       case 'join':
-        const playerId = this.join(msg.player);
+        const { playerId, error } = this.join(msg.player);
         if (playerId) {
           return { ...OK, message: { type: 'joined', playerId } };
+        } else if (error) {
+          return { ...OK, message: { type: 'join-error', error } };
         }
         break;
       case 'leave':
         this.leave(msg.playerId);
         return OK;
+      case 'chat':
+        return { ...OK, toAll: true, message: { type: 'chat', message: msg.message } };
       default: // nok
     }
     return { ok: false };
@@ -70,23 +74,22 @@ export class GameService {
     this.updateReady();
   }
 
-  private join(player: Player): number {
+  private join(player: Player): { playerId?: number, error?: string } {
     if (!player.name || this.playing) {
-      return;
+      return {};
     }
 
     const joiningPlayerName = player.name.toLowerCase();
-    if (this.players.some(({ name }) => name.toLowerCase() === joiningPlayerName)) {
-      log(`name "${player.name}" alreay used. Please use a different one.`);
-      return;
+    if (joiningPlayerName === 'sys' || this.players.some(({ name }) => name.toLowerCase() === joiningPlayerName)) {
+      return { error: `"${player.name}" wird schon verwendet. Bitte wähle einen anderen Namen.` };
     }
 
-    const id = Date.now();
-    const newPlayer = { ...player, id };
+    const playerId = Date.now();
+    const newPlayer = { ...player, id: playerId };
 
     this.players.push(newPlayer);
     this.updateGamePlayers();
-    return id;
+    return { playerId };
   }
 
   private leave(playerId: number) {

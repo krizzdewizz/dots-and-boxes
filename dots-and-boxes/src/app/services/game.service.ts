@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent } from '@shared/model';
+import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent, ChatMessage } from '@shared/model';
 import * as boardService from '@shared/board.service';
 import * as io from 'socket.io-client';
 import { environment } from '../../environments/environment';
@@ -12,14 +12,21 @@ const LAST_PLAYER_ID_KEY = 'dab-player-id';
 export class GameService {
 
   game: Game;
-
-  onGame = new EventEmitter<Game>();
+  chatMessages: ChatMessage[] = [];
+  joinError = new EventEmitter<string>();
   playerId: number;
   private lastPlayerId: number;
 
   private ws: SocketIOClient.Socket;
 
+  chat(text: string) {
+    this.send({ type: 'chat', message: { sender: this.playerName, text } });
+  }
+
   init() {
+
+    (window as any).q = this;
+
     this.lastPlayerId = Number(localStorage.getItem(LAST_PLAYER_ID_KEY));
 
     this.ws = io(environment.socketUrl);
@@ -28,11 +35,19 @@ export class GameService {
         case 'game':
           this.game = msg.game;
           this.findPlayerInGame();
-          this.onGame.next(this.game);
           break;
         case 'joined':
           this.playerId = this.lastPlayerId = msg.playerId;
           localStorage.setItem(LAST_PLAYER_ID_KEY, String(this.lastPlayerId));
+          break;
+        case 'join-error':
+          this.joinError.emit(msg.error);
+          setTimeout(() => this.joinError.emit(), 3000);
+          break;
+        case 'chat':
+          if (this.hasJoined) {
+            this.addChatMessage(msg.message);
+          }
           break;
       }
     });
@@ -40,6 +55,14 @@ export class GameService {
     this.ws.on('disconnect', () => {
       this.reset();
     });
+  }
+
+  private addChatMessage(message: ChatMessage) {
+    const { chatMessages } = this;
+    chatMessages.push(message);
+    if (chatMessages.length > 10) {
+      chatMessages.shift();
+    }
   }
 
   private findPlayerInGame() {
@@ -51,6 +74,11 @@ export class GameService {
     if (game.players.some(player => player.id === lastPlayerId)) {
       this.playerId = lastPlayerId;
     }
+  }
+
+  private get playerName(): string {
+    const pl = this.game.players.find(player => player.id === this.playerId);
+    return pl ? pl.name : '?';
   }
 
   get hasJoined(): boolean {
@@ -76,6 +104,7 @@ export class GameService {
   }
 
   join(player: Player) {
+    this.joinError.emit();
     this.send({ type: 'join', player });
   }
 
@@ -92,6 +121,7 @@ export class GameService {
     delete this.playerId;
     delete this.lastPlayerId;
     delete this.game;
+    this.chatMessages = [];
     localStorage.removeItem(LAST_PLAYER_ID_KEY);
   }
 

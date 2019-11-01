@@ -37,6 +37,11 @@ export interface Game {
     players: Player[];
 }
 
+export interface ChatMessage {
+    sender: string;
+    text: string;
+}
+
 // ServerSentEvents
 
 export interface GameEvent {
@@ -49,7 +54,21 @@ export interface JoinedEvent {
     playerId: number;
 }
 
-export type ServerSentEvent = GameEvent | JoinedEvent;
+export interface JoinErrorEvent {
+    type: 'join-error';
+    error: string;
+}
+
+export interface ChatEvent {
+    type: 'chat';
+    message: ChatMessage;
+}
+
+export type ServerSentEvent =
+    GameEvent
+    | JoinedEvent
+    | JoinErrorEvent
+    | ChatEvent;
 
 // ClientSentEvents
 
@@ -84,5 +103,6 @@ export type ClientSentEvent =
     | RestartGameEvent
     | JoinEvent
     | LeaveEvent
-    | ClickLineEvent;
+    | ClickLineEvent
+    | ChatEvent;
 

@@ -3,12 +3,13 @@
   <div [ngSwitch]="game.state">
     <div *ngSwitchCase="GameState.WAITING_FOR_PLAYERS">
 
-      <ng-container *ngIf="notJoined; else waitingForMorePlayers">
+      <ng-container *ngIf="!joined; else waitingForMorePlayers">
 
-        <div>
-          <input [(ngModel)]="playerName" type="text">
-          <button (click)="join()">Beitreten</button>
-        </div>
+        <form (ngSubmit)="join()">
+          <input name="playerName" [(ngModel)]="playerName" type="text">
+          <button type="submit">Beitreten</button>
+          <div>{{ gameService.joinError | async }}</div>
+        </form>
 
       </ng-container>
     </div>
@@ -32,6 +33,9 @@
 
   <button (click)="restart()">Neu beginnen</button>
   <button (click)="leave()">Spiel verlassen</button>
+
+  <dab-chat *ngIf="joined"></dab-chat>
+
 </ng-container>
 
 <ng-template #score>

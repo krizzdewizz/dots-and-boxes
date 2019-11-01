@@ -1,5 +1,5 @@
 import { GameService } from './game.service';
-import { ServerSentEvent } from '@shared/model';
+import { ServerSentEvent, ClientSentEvent } from '@shared/model';
 import { log } from './util/util';
 import express from 'express';
 import http from 'http';
@@ -25,20 +25,38 @@ io.on('connection', ws => {
         dest.emit('dab-message', message);
     }
 
+    function chat(text: string) {
+        send(io, { type: 'chat', message: { sender: 'sys', text } });
+    }
+
     send(ws);
 
-    ws.on('dab-message', msg => {
+    ws.on('dab-message', (msg: ClientSentEvent) => {
 
         log(`received:`, msg);
 
-        const { ok, message } = gameService.handle(msg);
+        let playerLeft: string;
+        if (msg.type === 'leave') {
+            const player = gameService.game.players.find(p => p.id === msg.playerId);
+            playerLeft = player ? player.name : '?';
+        }
+
+        const { ok, message, toAll } = gameService.handle(msg);
         if (ok) {
             if (message) {
                 log('sending response to client:', message);
-                send(ws, message);
+                send(toAll ? io : ws, message);
+
+                if (msg.type === 'join') {
+                    chat(`Willkommen ${msg.player.name}`);
+                }
             }
             log('sending game state to clients');
             send(io);
+
+            if (playerLeft) {
+                chat(`${playerLeft} hat das Spiel verlassen`);
+            }
         }
     });
 });

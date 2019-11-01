@@ -1,0 +1,30 @@
+:host {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    height: 290px;
+    width: 250px;
+    padding: 5px;
+    overflow: auto;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+
+    .title {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .messages {
+        flex: 1;
+    }
+
+    .message {
+        padding: 2px;
+        span {
+            color: lightgray;
+            margin-right: 5px;
+        }
+    }
+
+}

@@ -7,6 +7,7 @@ import { BoardComponent } from './board/board.component';
 import { DesignComponent } from './design/design.component';
 import { GameComponent } from './game/game.component';
 import { AppRoutingModule } from './app-routing.module';
+import { ChatComponent } from './chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
     BoardComponent,
     DesignComponent,
     GameComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,

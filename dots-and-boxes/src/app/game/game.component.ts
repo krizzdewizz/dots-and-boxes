@@ -19,8 +19,8 @@ export class GameComponent {
     return this.gameService.game;
   }
 
-  get notJoined(): boolean {
-    return !this.gameService.playerId;
+  get joined(): boolean {
+    return Boolean(this.gameService.playerId);
   }
 
   get currentPlayer(): PlayerIndex {
