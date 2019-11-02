@@ -5,7 +5,7 @@ import express from 'express';
 import http from 'http';
 import socket from 'socket.io';
 
-const PORT = 80;
+const PORT = process.env.PORT || 8999;
 
 const app = express();
 // .use('/node_modules', express.static('node_modules'))
