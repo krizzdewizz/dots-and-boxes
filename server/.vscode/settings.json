@@ -1,6 +1,7 @@
 {
     "files.exclude": {
         "node_modules": true,
+        "out": true,
         "**/.git": true,
         "**/*.js": {
             "when": "$(basename).ts"

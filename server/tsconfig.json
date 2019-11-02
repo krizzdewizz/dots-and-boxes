@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "target": "ESNEXT",
+    "target": "es5",
     "module": "commonjs",
     "outDir": "./out",
     "lib": [
