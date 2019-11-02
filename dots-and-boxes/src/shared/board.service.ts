@@ -1,5 +1,4 @@
 import { Board, Box, Row, Line, LineName } from '@shared/model';
-import { random } from './util';
 
 export function newBox(): Box {
   return {
@@ -98,38 +97,4 @@ export function isBoundaryOwner({ l, r, t, b }: Box): boolean {
 
 export function getLine(board: Board, row: number, box: number, line: LineName): Line {
   return board[row][box][line];
-}
-
-function freeLines(box: Box): Line[] {
-  const lines: Line[] = [];
-
-  const addFree = line => {
-    if (!lineComplete(line)) {
-      lines.push(line);
-    }
-  };
-
-  addFree(box.t);
-  addFree(box.b);
-  addFree(box.l);
-  addFree(box.r);
-
-  return lines;
-}
-
-export function findFreeLine(board: Board): Line {
-  const lines: Line[] = [];
-  let best: Line;
-
-  board.forEach(row => row.forEach(box => {
-    const free = freeLines(box);
-
-    lines.push(...free);
-
-    if (!best && free.length === 1) {
-      best = free[0];
-    }
-  }));
-
-  return best || lines[random(0, lines.length)];
 }

@@ -1,5 +1,6 @@
 import { ClientSentEvent, ServerSentEvent, Player, Line, Game, GameState, PlayerIndex, Board, MAX_PLAYERS } from '@shared/model';
 import * as boardService from '@shared/board.service';
+import * as botService from './bot.service';
 import { copyObj, log } from '@shared/util';
 
 const OK = { ok: true };
@@ -195,7 +196,7 @@ export class GameService {
     if (this.isBot(player)) {
       this.chat(`"${player.name}" is thinking...`);
       setTimeout(() => {
-        this.click(player.id, boardService.findFreeLine(game.board));
+        this.click(player.id, botService.findFreeLine(game.board));
         this.sendGame();
       }, 1000);
     }
