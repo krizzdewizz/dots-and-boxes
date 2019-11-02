@@ -8,7 +8,7 @@ var util_1 = require("./shared/util");
 var express_1 = __importDefault(require("express"));
 var http_1 = __importDefault(require("http"));
 var socket_io_1 = __importDefault(require("socket.io"));
-var PORT = 8999;
+var PORT = process.env.PORT || 8999;
 var app = express_1.default();
 // .use('/node_modules', express.static('node_modules'))
 app.use(express_1.default.static('out/dots-and-boxes'));

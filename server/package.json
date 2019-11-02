@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && node out/server/src/index",
+    "start": "npm run build && node out/index",
     "tsc:watch": "tsc -p . -w",
     "build": "del-cli out/** && tsc -p .",
     "lint": "tslint --project .",

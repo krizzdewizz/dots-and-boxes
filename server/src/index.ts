@@ -11,6 +11,12 @@ const app = express();
 // .use('/node_modules', express.static('node_modules'))
 app.use(express.static('out/dots-and-boxes'));
 
+app.use((req, res, next) => {
+    // tslint:disable-next-line:max-line-length
+    res.header('Content-Security-Policy', 'default-src \'self\' ; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\'');
+    next();
+});
+
 const server = http.createServer(app);
 
 const io = socket(server);
