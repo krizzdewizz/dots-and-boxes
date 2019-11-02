@@ -9,7 +9,7 @@ const PORT = 8999;
 
 const app = express();
 // .use('/node_modules', express.static('node_modules'))
-// .use(express.static('www'))
+app.use(express.static('out/dots-and-boxes'));
 
 const server = http.createServer(app);
 
