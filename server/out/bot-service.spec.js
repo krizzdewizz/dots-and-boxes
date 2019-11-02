@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var bot_service_1 = require("./bot.service");
-var board_service_1 = require("../../dots-and-boxes/src/shared/board.service");
+var board_service_1 = require("./shared/board.service");
 describe('BotService', function () {
     var size = 3;
     var board;

@@ -1,6 +1,6 @@
-import { lineComplete } from '@shared/board.service';
-import { Board, Box, Line } from '@shared/model';
-import { random } from '@shared/util';
+import { lineComplete } from './shared/board.service';
+import { Board, Box, Line } from './shared/model';
+import { random } from './shared/util';
 
 function freeLines(box: Box): Line[] {
     const free = [];

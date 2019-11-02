@@ -1,7 +1,7 @@
-import { ClientSentEvent, ServerSentEvent, Player, Line, Game, GameState, PlayerIndex, Board, MAX_PLAYERS } from '@shared/model';
-import * as boardService from '@shared/board.service';
+import { ClientSentEvent, ServerSentEvent, Player, Line, Game, GameState, PlayerIndex, Board, MAX_PLAYERS } from './shared/model';
+import * as boardService from './shared/board.service';
 import * as botService from './bot.service';
-import { copyObj, log } from '@shared/util';
+import { copyObj, log } from './shared/util';
 
 const OK = { ok: true };
 

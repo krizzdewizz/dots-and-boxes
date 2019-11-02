@@ -6,9 +6,7 @@
   "scripts": {
     "start": "npm run build && node out/server/src/index",
     "tsc:watch": "tsc -p . -w",
-    "build": "tsc -p .",
-    "buildx": "del-cli out/** && tsc -p .",
-    "postbuild": "node scripts/replace-imports",
+    "build": "del-cli out/** && tsc -p .",
     "lint": "tslint --project .",
     "test": "jest"
   },

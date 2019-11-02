@@ -1,7 +1,7 @@
 import { Component, HostBinding, Input, Output, EventEmitter } from '@angular/core';
-import { Board, Box, LineName, Line } from '@shared/model';
+import { Board, Box, LineName, Line } from '../../shared/model';
 import { DomSanitizer } from '@angular/platform-browser';
-import * as boardService from '@shared/board.service';
+import * as boardService from '../../shared/board.service';
 
 interface LineItem extends Line {
   class: string;

@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent, ChatMessage, Board, MAX_PLAYERS } from '@shared/model';
-import * as boardService from '@shared/board.service';
+import { ClientSentEvent, Game, GameState, Line, Player, PlayerIndex, ServerSentEvent, ChatMessage, Board, MAX_PLAYERS } from '../../shared/model';
+import * as boardService from '../../shared/board.service';
 import * as io from 'socket.io-client';
 import { environment } from '../../environments/environment';
 

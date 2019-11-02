@@ -1,4 +1,4 @@
-import * as boardService from '@shared/board.service';
+import * as boardService from './shared/board.service';
 
 describe('BoardService', () => {
     it('should create board', () => {

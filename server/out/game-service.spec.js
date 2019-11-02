@@ -44,9 +44,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var game_service_1 = require("./game.service");
-var model_1 = require("../../dots-and-boxes/src/shared/model");
-var util_1 = require("../../dots-and-boxes/src/shared/util");
-var boardService = __importStar(require("../../dots-and-boxes/src/shared/board.service"));
+var model_1 = require("./shared/model");
+var util_1 = require("./shared/util");
+var boardService = __importStar(require("./shared/board.service"));
 describe('GameService', function () {
     var service;
     beforeEach(function () {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import * as boardService from '@shared/board.service';
-import { Board, Row } from '@shared/model';
+import * as boardService from '../../shared/board.service';
+import { Board, Row } from '../../shared/model';
 
 const BOARD_KEY = 'dab-design-board';
 

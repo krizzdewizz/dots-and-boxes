@@ -1,7 +1,7 @@
 import { GameService } from './game.service';
-import { GameState } from '@shared/model';
-import { sleep } from '@shared/util';
-import * as boardService from '@shared/board.service';
+import { GameState } from './shared/model';
+import { sleep } from './shared/util';
+import * as boardService from './shared/board.service';
 
 describe('GameService', () => {
 

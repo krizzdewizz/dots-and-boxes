@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var board_service_1 = require("../../dots-and-boxes/src/shared/board.service");
-var util_1 = require("../../dots-and-boxes/src/shared/util");
+var board_service_1 = require("./shared/board.service");
+var util_1 = require("./shared/util");
 function freeLines(box) {
     var free = [];
     var addIfFree = function (line) {

@@ -1,6 +1,6 @@
 import { findFreeLine } from './bot.service';
-import { Board } from '@shared/model';
-import { newBoard } from '@shared/board.service';
+import { Board } from './shared/model';
+import { newBoard } from './shared/board.service';
 
 describe('BotService', () => {
 

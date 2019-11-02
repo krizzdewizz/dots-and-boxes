@@ -7,7 +7,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var boardService = __importStar(require("../../dots-and-boxes/src/shared/board.service"));
+var boardService = __importStar(require("./shared/board.service"));
 describe('BoardService', function () {
     it('should create board', function () {
         var size = 3;

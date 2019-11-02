@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var game_service_1 = require("./game.service");
-var util_1 = require("../../dots-and-boxes/src/shared/util");
+var util_1 = require("./shared/util");
 var express_1 = __importDefault(require("express"));
 var http_1 = __importDefault(require("http"));
 var socket_io_1 = __importDefault(require("socket.io"));

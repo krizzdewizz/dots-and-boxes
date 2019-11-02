@@ -523,7 +523,7 @@
             /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
             /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
             /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/platform-browser */ "./node_modules/@angular/platform-browser/fesm2015/platform-browser.js");
-            /* harmony import */ var _shared_board_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/board.service */ "./src/shared/board.service.ts");
+            /* harmony import */ var _shared_board_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../shared/board.service */ "./src/shared/board.service.ts");
             var BoardComponent = /** @class */ (function () {
                 function BoardComponent(sanitizer) {
                     this.sanitizer = sanitizer;
@@ -704,7 +704,7 @@
             /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
             /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
             /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
-            /* harmony import */ var _shared_board_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/board.service */ "./src/shared/board.service.ts");
+            /* harmony import */ var _shared_board_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../shared/board.service */ "./src/shared/board.service.ts");
             /* harmony import */ var _services_design_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../services/design.service */ "./src/app/services/design.service.ts");
             /* harmony import */ var _services_game_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/game.service */ "./src/app/services/game.service.ts");
             /* harmony import */ var _shared_util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../shared/util */ "./src/shared/util.ts");
@@ -782,7 +782,7 @@
             /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameComponent", function () { return GameComponent; });
             /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
             /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-            /* harmony import */ var _shared_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/model */ "./src/shared/model.ts");
+            /* harmony import */ var _shared_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../shared/model */ "./src/shared/model.ts");
             /* harmony import */ var _services_game_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/game.service */ "./src/app/services/game.service.ts");
             var GameComponent = /** @class */ (function () {
                 function GameComponent(gameService) {
@@ -877,7 +877,7 @@
             /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DesignService", function () { return DesignService; });
             /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
             /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-            /* harmony import */ var _shared_board_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/board.service */ "./src/shared/board.service.ts");
+            /* harmony import */ var _shared_board_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../shared/board.service */ "./src/shared/board.service.ts");
             var BOARD_KEY = 'dab-design-board';
             var MAX_BOARD_SIZE = 15;
             var MIN_BOARD_SIZE = 3;
@@ -993,8 +993,8 @@
             /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameService", function () { return GameService; });
             /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
             /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-            /* harmony import */ var _shared_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @shared/model */ "./src/shared/model.ts");
-            /* harmony import */ var _shared_board_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @shared/board.service */ "./src/shared/board.service.ts");
+            /* harmony import */ var _shared_model__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../shared/model */ "./src/shared/model.ts");
+            /* harmony import */ var _shared_board_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../shared/board.service */ "./src/shared/board.service.ts");
             /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/lib/index.js");
             /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/ __webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_4__);
             /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");

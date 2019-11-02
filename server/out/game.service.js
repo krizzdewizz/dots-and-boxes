@@ -18,10 +18,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var model_1 = require("../../dots-and-boxes/src/shared/model");
-var boardService = __importStar(require("../../dots-and-boxes/src/shared/board.service"));
+var model_1 = require("./shared/model");
+var boardService = __importStar(require("./shared/board.service"));
 var botService = __importStar(require("./bot.service"));
-var util_1 = require("../../dots-and-boxes/src/shared/util");
+var util_1 = require("./shared/util");
 var OK = { ok: true };
 var GameService = /** @class */ (function () {
     function GameService() {

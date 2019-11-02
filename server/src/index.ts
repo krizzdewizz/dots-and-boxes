@@ -1,6 +1,6 @@
 import { GameService } from './game.service';
-import { ServerSentEvent, ClientSentEvent } from '@shared/model';
-import { log } from '@shared/util';
+import { ServerSentEvent, ClientSentEvent } from './shared/model';
+import { log } from './shared/util';
 import express from 'express';
 import http from 'http';
 import socket from 'socket.io';

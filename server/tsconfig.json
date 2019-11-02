@@ -11,11 +11,6 @@
     "sourceMap": true,
     "strict": false,
     "esModuleInterop": true,
-    "paths": {
-      "@shared/*": [
-        "../dots-and-boxes/src/shared/*"
-      ]
-    }
   },
   "include": [
     "src"

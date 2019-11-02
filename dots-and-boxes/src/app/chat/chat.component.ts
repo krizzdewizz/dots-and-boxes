@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ChatMessage } from '@shared/model';
+import { ChatMessage } from '../../shared/model';
 import { GameService } from '../services/game.service';
 
 @Component({
