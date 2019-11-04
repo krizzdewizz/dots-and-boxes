@@ -16,7 +16,6 @@ const io = socket(server);
 
 const gameService = new GameService();
 
-
 function send(dest, message: ServerSentEvent = { type: 'game', game: gameService.game }) {
     dest.emit('dab-message', message);
 }

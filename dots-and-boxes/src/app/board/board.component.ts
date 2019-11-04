@@ -45,6 +45,7 @@ export class BoardComponent {
   @Input() player1Turn = false;
 
   @Output() clickLine = new EventEmitter<{ row: number, box: number, line: LineName }>();
+  @Output() clickBox = new EventEmitter<Box>();
 
   constructor(private sanitizer: DomSanitizer) {
   }
@@ -58,11 +59,19 @@ export class BoardComponent {
     ];
   }
 
-  onClickLine(row: number, box: number, line: LineName) {
+  onClickLine(row: number, box: number, line: LineName, e: MouseEvent) {
     if (this.disabled) {
       return;
     }
     this.clickLine.emit({ row, box, line });
+    e.cancelBubble = true;
+  }
+
+  onClickBox(box: Box) {
+    if (this.disabled) {
+      return;
+    }
+    this.clickBox.emit(box);
   }
 
   boundaryOwner(box: Box): boolean {

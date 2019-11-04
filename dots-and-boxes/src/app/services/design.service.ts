@@ -67,7 +67,7 @@ export class DesignService {
       boardService.joinBoxes(board);
     } else {
       board.forEach(row => {
-        row.splice(row.length - 1, 1);
+        row.pop();
         const box = row[row.length - 1];
         box.r.b = 1;
       });
@@ -102,7 +102,7 @@ export class DesignService {
 
       boardService.joinBoxes(board);
     } else {
-      board.splice(board.length - 1, 1);
+      board.pop();
       const row = board[board.length - 1];
       row.forEach(box => box.b.b = 1);
     }

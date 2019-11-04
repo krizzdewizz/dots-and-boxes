@@ -8,6 +8,7 @@ import { DesignComponent } from './design/design.component';
 import { GameComponent } from './game/game.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ChatComponent } from './chat/chat.component';
+import { ScoreComponent } from './score/score.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { ChatComponent } from './chat/chat.component';
     DesignComponent,
     GameComponent,
     ChatComponent,
+    ScoreComponent,
   ],
   imports: [
     BrowserModule,

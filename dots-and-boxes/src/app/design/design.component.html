@@ -18,7 +18,7 @@
     </div>
   </div>
 
-  <dab-board [board]="board" [design]="true" (clickLine)="onClickLine($event)"></dab-board>
+  <dab-board [board]="board" [design]="true" (clickBox)="onClickBox($event)" (clickLine)="onClickLine($event)"></dab-board>
 
 </div>
 <button type="button" (click)="startGame()">Neues Spiel</button>

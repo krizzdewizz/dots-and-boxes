@@ -43,12 +43,9 @@ export class GameComponent implements OnInit {
     return this.gameService.isPlayerTurn(index);
   }
 
-  playerActive(index: PlayerIndex): boolean {
-    const { game } = this;
-    if (game.state === GameState.ENDED) {
-      return game.winners.includes(index);
-    }
-    return game.currentPlayer === index;
+  get showScore(): boolean {
+    const state = this.game.state;
+    return state === GameState.PLAYING || state === GameState.READY || state === GameState.ENDED;
   }
 
   join() {
@@ -72,5 +69,9 @@ export class GameComponent implements OnInit {
 
   addBot() {
     this.gameService.addBot();
+  }
+
+  removeBot() {
+    this.gameService.removeBot();
   }
 }

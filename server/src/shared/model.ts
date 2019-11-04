@@ -37,6 +37,7 @@ export interface Game {
     countBoxesOwnedBy: { [playerIndex: number]: number };
     winners: PlayerIndex[];
     players: Player[];
+    spectators: Player[];
 }
 
 export interface ChatMessage {
@@ -109,6 +110,10 @@ export interface AddBotEvent {
     type: 'addBot';
 }
 
+export interface RemoveBotEvent {
+    type: 'removeBot';
+}
+
 export type ClientSentEvent =
     StartGameEvent
     | RestartGameEvent
@@ -117,5 +122,6 @@ export type ClientSentEvent =
     | ClickLineEvent
     | NewBoardEvent
     | ChatEvent
-    | AddBotEvent;
+    | AddBotEvent
+    | RemoveBotEvent;
 

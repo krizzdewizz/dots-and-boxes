@@ -152,8 +152,10 @@ $boundary-color: gray;
         cursor: initial;
     }
 
-    &.design .boundary {
-        cursor: pointer;
+    &.design {
+        .boundary, .col {
+            cursor: pointer;
+        }
     }
 }
 

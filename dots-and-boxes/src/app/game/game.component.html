@@ -1,68 +1,36 @@
 <ng-container *ngIf="game; else waitingForGame">
 
-  <div [ngSwitch]="game.state">
-    <div *ngSwitchCase="GameState.WAITING_FOR_PLAYERS">
+  <ng-container *ngIf="!joined; else gameState">
 
-      <ng-container *ngIf="!joined; else waitingForMorePlayers">
+    <form (ngSubmit)="join()">
+      <input placeholder="Name" maxlength="15" name="playerName" [(ngModel)]="playerName" type="text">
+      <button type="submit">Beitreten</button>
+      <div>{{ gameService.joinError | async }}</div>
+    </form>
 
-        <form (ngSubmit)="join()">
-          <input placeholder="Name" maxlength="15" name="playerName" [(ngModel)]="playerName" type="text">
-          <button type="submit">Beitreten</button>
-          <div>{{ gameService.joinError | async }}</div>
-        </form>
+  </ng-container>
 
-      </ng-container>
-    </div>
+  <ng-template #gameState>
 
-    <div *ngSwitchCase="GameState.READY">
-      <button (click)="start()">Start</button>
-      <div *ngIf="false; else score"></div>
-    </div>
+    <div *ngIf="game.state === GameState.WAITING_FOR_PLAYERS">Warte auf noch mehr Spieler</div>
+    <div *ngIf="gameService.isSpectator">Die maximale Anzahl Spieler ist erreicht. Du darst gerne zuschauen.</div>
 
-    <div *ngSwitchCase="GameState.PLAYING">
-      <div *ngIf="false; else score"></div>
-    </div>
+    <dab-score *ngIf="showScore"></dab-score>
 
-    <div *ngSwitchCase="GameState.ENDED">
-      <div *ngIf="false; else score"></div>
-    </div>
-  </div>
+    <dab-board (clickLine)="onClickLine($event)" [board]="game.board" [disabled]="boardDisabled"
+      [player0Turn]="playerTurn(0)" [player1Turn]="playerTurn(1)"></dab-board>
 
-  <dab-board (clickLine)="onClickLine($event)" [board]="game.board" [disabled]="boardDisabled"
-    [player0Turn]="playerTurn(0)" [player1Turn]="playerTurn(1)"></dab-board>
+    <button [disabled]="game.state !== GameState.READY" (click)="start()">Start</button>
+    <button [routerLink]="['design']">Neues Spiel</button>
+    <button (click)="restart()">Neu beginnen</button>
+    <button (click)="addBot()">Bot hinzufügen</button>
+    <button (click)="removeBot()">Bot entfernen</button>
+    <button (click)="leave()">Spiel verlassen</button>
 
-  <button [routerLink]="['design']">Neues Spiel</button>
-  <button (click)="restart()">Neu beginnen</button>
-  <button (click)="addBot()">Bot hinzufügen</button>
-  <button (click)="leave()">Spiel verlassen</button>
+    <dab-chat *ngIf="joined"></dab-chat>
 
-  <dab-chat *ngIf="joined"></dab-chat>
+  </ng-template>
 
-</ng-container>
-
-<ng-template #score>
-  <div class="score">
-
-    <div class="score-card player-1" [class.active]="playerActive(0)">
-      <div>{{ game.players[0]?.name }}</div>
-      <span>{{ game.countBoxesOwnedBy[0] || 0 }}</span>
-      <img *ngIf="playerActive(0) && game.state === GameState.ENDED" src="assets/images/pokal.png">
-    </div>
-
-    <span class="versus">vs</span>
-
-    <div class="score-card player-2" [class.active]="playerActive(1)">
-      <div>{{ game.players[1]?.name }}</div>
-      <span>{{ game.countBoxesOwnedBy[1] || 0 }}</span>
-      <img *ngIf="playerActive(1) && game.state === GameState.ENDED" src="assets/images/pokal.png">
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #waitingForGame>
-  <div>Verbinde zum game server...</div>
-</ng-template>
-
-<ng-template #waitingForMorePlayers>
-  <div>Warte auf noch mehr Spieler</div>
-</ng-template>
+  <ng-template #waitingForGame>
+    <div>Verbinde zum game server...</div>
+  </ng-template>

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import * as boardService from '../../shared/board.service';
-import { Board } from '../../shared/model';
+import { Board, Box } from '../../shared/model';
 import { DesignService } from '../services/design.service';
 import { GameService } from '../services/game.service';
 import { copyObj } from '../../shared/util';
@@ -28,6 +28,15 @@ export class DesignComponent {
   onClickLine({ row, box, line }) {
     const lineObj = boardService.getLine(this.board, row, box, line);
     lineObj.b = lineObj.b ? 0 : 1; // invert
+    this.designService.saveBoard();
+  }
+
+  onClickBox(box: Box) {
+    const own = boardService.isBoundaryOwner(box) ? 0 : 1; // invert
+    box.b.b = own;
+    box.t.b = own;
+    box.l.b = own;
+    box.r.b = own;
     this.designService.saveBoard();
   }
 

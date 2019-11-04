@@ -1,7 +1,7 @@
 import { ClientSentEvent, ServerSentEvent, Player, Line, Game, GameState, PlayerIndex, Board, MAX_PLAYERS } from './shared/model';
 import * as boardService from './shared/board.service';
 import * as botService from './bot.service';
-import { copyObj, log } from './shared/util';
+import { copyObj, log, random } from './shared/util';
 
 const OK = { ok: true };
 
@@ -13,6 +13,7 @@ export class GameService {
   game: Game;
 
   private players: Player[] = [];
+  private spectators: Player[] = [];
   private lastBoard: Board;
 
   constructor() {
@@ -49,6 +50,9 @@ export class GameService {
       case 'addBot':
         this.addBot();
         return OK;
+      case 'removeBot':
+        this.removeBot();
+        return OK;
       case 'chat':
         return { ...OK, toAll: true, message: { type: 'chat', message: msg.message } };
       default: // nok
@@ -66,13 +70,26 @@ export class GameService {
     this.updateGamePlayers();
   }
 
+  removeBot() {
+    const { game } = this;
+    if (game.state === GameState.PLAYING) {
+      return;
+    }
+
+    const bot = this.players.find(player => this.isBot(player));
+    if (bot) {
+      this.leave(bot.id);
+    }
+  }
+
   private isBot({ id }: Player): boolean {
     return id < 10;
   }
 
   private startGame() {
     this.game.state = GameState.PLAYING;
-    this.game.currentPlayer = 0;
+    this.game.currentPlayer = random(0, this.game.players.length);
+    this.botTurn();
   }
 
   private restartGame(board = this.lastBoard) {
@@ -91,6 +108,7 @@ export class GameService {
       countBoxesOwnedBy: {},
       board,
       players: copyObj(this.players),
+      spectators: copyObj(this.spectators),
       winners: []
     };
 
@@ -112,13 +130,18 @@ export class GameService {
     const playerId = Date.now();
     const newPlayer = { ...player, id: playerId };
 
-    this.players.push(newPlayer);
+    if (this.game.players.length === MAX_PLAYERS) {
+      this.spectators.push(newPlayer);
+    } else {
+      this.players.push(newPlayer);
+    }
     this.updateGamePlayers();
     return { playerId };
   }
 
   private leave(playerId: number) {
     this.players = this.players.filter(player => player.id !== playerId);
+    this.spectators = this.spectators.filter(player => player.id !== playerId);
     this.updateGamePlayers();
 
     if (this.game.state === GameState.WAITING_FOR_PLAYERS) {
@@ -127,6 +150,11 @@ export class GameService {
       this.game.countBoxesOwnedBy = {};
       this.game.winners = [];
       delete this.game.currentPlayer;
+
+      if (this.spectators.length) {
+        this.players.push(this.spectators.shift());
+        this.updateGamePlayers();
+      }
     }
   }
 
@@ -136,6 +164,7 @@ export class GameService {
 
   private updateGamePlayers() {
     this.game.players = copyObj(this.players);
+    this.game.spectators = copyObj(this.spectators);
     this.updateReady();
   }
 
@@ -174,12 +203,12 @@ export class GameService {
       if (!boxCompleted) {
         this.nextPlayer();
       }
-      this.botTurn(game);
+      this.botTurn();
     }
   }
 
   private updateReady() {
-    this.game.state = this.players.length < 2 ? GameState.WAITING_FOR_PLAYERS : GameState.READY;
+    this.game.state = this.players.length < MAX_PLAYERS ? GameState.WAITING_FOR_PLAYERS : GameState.READY;
   }
 
   private nextPlayer() {
@@ -191,7 +220,8 @@ export class GameService {
     }
   }
 
-  private botTurn(game: Game) {
+  private botTurn() {
+    const { game } = this;
     const player = game.players[game.currentPlayer];
     if (this.isBot(player)) {
       this.chat(`"${player.name}" is thinking...`);

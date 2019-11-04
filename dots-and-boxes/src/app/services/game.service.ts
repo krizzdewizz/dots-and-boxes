@@ -93,7 +93,8 @@ export class GameService {
       return;
     }
 
-    if (game.players.some(player => player.id === lastPlayerId)) {
+    const isLastPlayer = player => player.id === lastPlayerId;
+    if (game.players.some(isLastPlayer) || game.spectators.some(isLastPlayer)) {
       this.playerId = lastPlayerId;
     }
   }
@@ -164,6 +165,10 @@ export class GameService {
     return currPlayer && currPlayer.id === this.playerId;
   }
 
+  get isSpectator(): boolean {
+    return this.hasJoined && this.game.spectators.some(spectator => spectator.id === this.playerId);
+  }
+
   isPlayerTurn(player: PlayerIndex): boolean {
     return this.isMyTurn && this.game.currentPlayer === player;
   }
@@ -174,5 +179,9 @@ export class GameService {
       return;
     }
     this.send({ type: 'addBot' });
+  }
+
+  removeBot() {
+    this.send({ type: 'removeBot' });
   }
 }

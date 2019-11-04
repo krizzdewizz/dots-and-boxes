@@ -1,7 +1,7 @@
 <div class="row" *ngFor="let row of board; let rowIndex = index; let lastRow = last">
-    <div class="col" *ngFor="let box of row; let boxIndex = index; let lastBox = last">
+    <div class="col" (click)="onClickBox(box)" *ngFor="let box of row; let boxIndex = index; let lastBox = last">
       <div *ngFor="let line of lines(box)"
-        (click)="onClickLine(rowIndex, boxIndex, line.name)"
+        (click)="onClickLine(rowIndex, boxIndex, line.name, $event)"
         [class]="line.class"
         [class.line]="true"
         [class.line-free]="line.o === undefined && !line.b"

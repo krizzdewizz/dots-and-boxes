@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        body {
+            padding-left: 30%;
+            padding-top: 5%;
+        }
+
+        .container {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            perspective: 500px;
+        }
+
+        #cube {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            animation: rotatecube 4s infinite;
+            animation-timing-function: linear;
+        }
+
+        #cube div {
+            width: 100px;
+            height: 100px;
+            display: block;
+            position: absolute;
+            border: 2px solid black;
+            line-height: 100px;
+            text-align: center;
+            font-size: 50px;
+            font-weight: bold;
+            background: white;
+        }
+
+        .side-0 {}
+
+        .side-4 {
+            transform: rotateY(90deg);
+        }
+
+        .side-5 {
+            transform: rotateY(180deg);
+        }
+
+        .side-1 {
+            transform: rotateY(270deg);
+        }
+
+        .side-3 {
+            transform: rotateX(90deg);
+        }
+
+        .side-2 {
+            transform: rotateX(270deg);
+        }
+
+        @keyframes rotatecube {
+            0% {
+                transform: rotateY(360deg) rotateZ(0deg);
+            }
+
+            50% {
+                transform: rotateY(180deg)  rotateZ(180deg);
+            }
+
+            100% {
+                transform: rotateY(0deg)  rotateZ(360deg);
+            }
+        }
+
+
+        /* .front {
+            background: rgba(255, 0, 0);
+        }
+
+        .back {
+            background: rgba(0, 255, 0);
+        }
+
+        .right {
+            background: rgba(0, 0, 255);
+        }
+
+        .left {
+            background: rgba(0, 255, 255);
+        }
+
+        .top {
+            background: rgba(255, 0, 255);
+        }
+
+        .bottom {
+            background: rgba(255, 255, 0);
+        } */
+
+        #cube .front {
+            transform: rotateY(0deg) translateZ(50px);
+        }
+
+        #cube .back {
+            transform: rotateX(180deg) rotateZ(180deg) translateZ(50px);
+        }
+
+        #cube .right {
+            transform: rotateY(90deg) translateZ(50px);
+        }
+
+        #cube .left {
+            transform: rotateY(-90deg) translateZ(50px);
+        }
+
+        #cube .top {
+            transform: rotateX(90deg) translateZ(50px);
+        }
+
+        #cube .bottom {
+            transform: rotateX(-90deg) translateZ(50px);
+        }
+    </style>
+
+
+    <script>
+        // function random(min, max) {
+        //     return Math.floor(min + Math.random() * (max - min));
+        // }
+
+        // const an = () => {
+        //     const c = document.querySelector('#cube')
+        //     const x = 'rotatecube' + random(1, 2);
+        //     console.log('xxx', x)
+        //     c.style.animationName = x;
+        //     setTimeout(an, random(1000, 1400))
+        // };
+
+        // setTimeout(an, random(1000, 1400))
+
+    </script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div id="cube">
+            <div class="front">1</div>
+            <div class="back">6</div>
+            <div class="right">2</div>
+            <div class="left">5</div>
+            <div class="top">3</div>
+            <div class="bottom">4</div>
+        </div>
+    </div>
+</body>
+
+</html>
