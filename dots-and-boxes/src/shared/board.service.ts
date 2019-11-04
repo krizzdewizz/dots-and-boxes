@@ -56,7 +56,7 @@ export function newBoard(width: number, height = width): Board {
     board.push(r);
   }
 
-  return this.joinBoxes(board);
+  return joinBoxes(board);
 }
 
 function setBoxBoundaryOwner(board: Board) {
