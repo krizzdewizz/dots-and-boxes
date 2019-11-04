@@ -8,13 +8,7 @@ import socket from 'socket.io';
 const PORT = process.env.PORT || 8999;
 
 const app = express();
-app
-    .use((req, res, next) => {
-        // tslint:disable-next-line:max-line-length
-        res.header('Content-Security-Policy', 'default-src \'self\' ; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\'');
-        next();
-    })
-    .use(express.static('out/dots-and-boxes'));
+app.use(express.static('out/dots-and-boxes'));
 
 const server = http.createServer(app);
 
