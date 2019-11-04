@@ -9,28 +9,29 @@
     </form>
 
   </ng-container>
+</ng-container>
 
-  <ng-template #gameState>
+<ng-template #gameState>
 
-    <div *ngIf="game.state === GameState.WAITING_FOR_PLAYERS">Warte auf noch mehr Spieler</div>
-    <div *ngIf="gameService.isSpectator">Die maximale Anzahl Spieler ist erreicht. Du darst gerne zuschauen.</div>
+  <div *ngIf="game.state === GameState.WAITING_FOR_PLAYERS">Warte auf noch mehr Spieler</div>
+  <div *ngIf="gameService.isSpectator">Die maximale Anzahl Spieler ist erreicht. Du darst gerne zuschauen.</div>
 
-    <dab-score *ngIf="showScore"></dab-score>
+  <dab-score *ngIf="showScore"></dab-score>
 
-    <dab-board (clickLine)="onClickLine($event)" [board]="game.board" [disabled]="boardDisabled"
-      [player0Turn]="playerTurn(0)" [player1Turn]="playerTurn(1)"></dab-board>
+  <dab-board (clickLine)="onClickLine($event)" [board]="game.board" [disabled]="boardDisabled"
+    [player0Turn]="playerTurn(0)" [player1Turn]="playerTurn(1)"></dab-board>
 
-    <button [disabled]="game.state !== GameState.READY" (click)="start()">Start</button>
-    <button [routerLink]="['design']">Neues Spiel</button>
-    <button (click)="restart()">Neu beginnen</button>
-    <button (click)="addBot()">Bot hinzufügen</button>
-    <button (click)="removeBot()">Bot entfernen</button>
-    <button (click)="leave()">Spiel verlassen</button>
+  <button [disabled]="game.state !== GameState.READY" (click)="start()">Start</button>
+  <button [routerLink]="['design']">Neues Spiel</button>
+  <button (click)="restart()">Neu beginnen</button>
+  <button (click)="addBot()">Bot hinzufügen</button>
+  <button (click)="removeBot()">Bot entfernen</button>
+  <button (click)="leave()">Spiel verlassen</button>
 
-    <dab-chat *ngIf="joined"></dab-chat>
+  <dab-chat *ngIf="joined"></dab-chat>
 
-  </ng-template>
+</ng-template>
 
-  <ng-template #waitingForGame>
-    <div>Verbinde zum game server...</div>
-  </ng-template>
+<ng-template #waitingForGame>
+  <div>Verbinde zum game server...</div>
+</ng-template>
