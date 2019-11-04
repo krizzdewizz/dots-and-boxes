@@ -10,8 +10,13 @@ var http_1 = __importDefault(require("http"));
 var socket_io_1 = __importDefault(require("socket.io"));
 var PORT = process.env.PORT || 8999;
 var app = express_1.default();
-// .use('/node_modules', express.static('node_modules'))
-app.use(express_1.default.static('out/dots-and-boxes'));
+app
+    .use(function (req, res, next) {
+    // tslint:disable-next-line:max-line-length
+    res.header('Content-Security-Policy', 'default-src \'self\' ; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\'');
+    next();
+})
+    .use(express_1.default.static('out/dots-and-boxes'));
 var server = http_1.default.createServer(app);
 var io = socket_io_1.default(server);
 var gameService = new game_service_1.GameService();
