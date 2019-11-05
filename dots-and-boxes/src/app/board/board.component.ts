@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, Output, EventEmitter } from '@angular/core';
+import { Component, HostBinding, Input, Output, EventEmitter, HostListener, ElementRef, OnInit } from '@angular/core';
 import { Board, Box, LineName, Line } from '../../shared/model';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as boardService from '../../shared/board.service';
@@ -13,7 +13,7 @@ interface LineItem extends Line {
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
-export class BoardComponent {
+export class BoardComponent implements OnInit {
 
   @HostBinding('class.current-player1') get currentPlayer1Class(): boolean {
     return this.player0Turn;
@@ -27,16 +27,6 @@ export class BoardComponent {
     return !this.design && this.disabled;
   }
 
-  @HostBinding('attr.style') get styleAttr() {
-    // const boxSize = 50;
-    // const boxLineSize = 8;
-    const boxSize = 80;
-    const boxLineSize = 12;
-    // const boxSize = 150;
-    // const boxLineSize = 16;
-    return this.sanitizer.bypassSecurityTrustStyle(`--box-size: ${boxSize}px; --box-line-size: ${boxLineSize}px;`);
-  }
-
   @Input() board: Board;
 
   @HostBinding('class.design') @Input() design: boolean;
@@ -47,7 +37,11 @@ export class BoardComponent {
   @Output() clickLine = new EventEmitter<{ row: number, box: number, line: LineName }>();
   @Output() clickBox = new EventEmitter<Box>();
 
-  constructor(private sanitizer: DomSanitizer) {
+  constructor(private sanitizer: DomSanitizer, private elRef: ElementRef) {
+  }
+
+  ngOnInit() {
+    this.updateBoxSize();
   }
 
   lines(box: Box): LineItem[] {
@@ -76,5 +70,19 @@ export class BoardComponent {
 
   boundaryOwner(box: Box): boolean {
     return boardService.isBoundaryOwner(box);
+  }
+
+  @HostListener('window:resize') updateBoxSize() {
+    const { board } = this;
+    if (!board) {
+      return;
+    }
+    const { innerWidth, innerHeight } = window;
+    const innerSize = Math.min(innerWidth, innerHeight);
+    const boxSize = Math.floor((innerSize - 40) / board.length);
+    const boxLineSize = boxSize < 70 ? 8 : 12;
+    const style = this.elRef.nativeElement.style;
+    style.setProperty(`--box-size`, `${boxSize}px`);
+    style.setProperty(`--box-line-size`, `${boxLineSize}px`);
   }
 }
